@@ -1,0 +1,14 @@
+/gradlew text eol=lf
+*.bat text eol=crlf
+*.jar binary
+
+# 모든 텍스트 파일에 대해 LF 사용
+* text=auto
+
+# .sh, .bash 파일 등 LF로만 유지
+*.sh eol=lf
+*.bash eol=lf
+
+# Windows 전용 파일들에 대해 CRLF로 유지
+*.bat eol=crlf
+*.cmd eol=crlf

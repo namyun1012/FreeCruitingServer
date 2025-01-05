@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>FreeCruiting</title>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+</head>
+<body>
+
+<h1>New Post</h1>
+
+<div class="col-md-12">
+    <div class="col-md-4">
+        <form>
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" class="form-control" id="title" placeholder="Enter title">
+            </div>
+            <div class="form-group">
+                <label for="author"> Author </label>
+                <input type="text" class="form-control" id="author" placeholder="Enter Author">
+            </div>
+            <div class="form-group">
+                <label for="content"> Content </label>
+                <textarea class="form-control" id="content" placeholder="Enter Content"></textarea>
+            </div>
+        </form>
+        <a href="/" role="button" class="btn btn-secondary">Cancel</a>
+        <button type="button" class="btn btn-primary" id="btn-save">Register</button>
+    </div>
+</div>
+
+{{>layout/footer}}

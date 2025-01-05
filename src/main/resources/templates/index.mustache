@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>hello html</title>
+</head>
+<body>
+
+<h1>FreeCruiting</h1>
+<div class = "col-md-12">
+    <div class = "row">
+        <div class = "col-md-6">
+            <a href="/post/save" role="button" class="btn btn-primary">New Post</a>
+        </div>
+    </div>
+    <br>
+    <!-- 목록 출력 영역 -->
+    <table class="table table-horizontal table-bordered">
+        <thead class="thead-strong">
+        <tr>
+            <th>id</th>
+            <th>title</th>
+            <th>author</th>
+            <th>updateDate</th>
+            <th>imageURL</th>
+        </tr>
+        </thead>
+        <tbody id="tbody">
+        {{#posts}}
+            <tr>
+                <td>{{id}}</td>
+                <td><a href="/post/update/{{id}}">{{title}}</a></td>
+                <td>{{author}}</td>
+                <td>{{modifiedDate}}</td>
+                <td>{{imageURL}}</td>
+            </tr>
+        {{/posts}}
+        </tbody>
+    </table>
+</div>
+
+{{>layout/footer}}
