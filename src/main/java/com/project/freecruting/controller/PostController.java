@@ -4,6 +4,7 @@ import com.project.freecruting.dto.post.PostListResponseDto;
 import com.project.freecruting.dto.post.PostResponseDto;
 import com.project.freecruting.dto.post.PostSaveRequestDto;
 import com.project.freecruting.dto.post.PostUpdateRequestDto;
+import com.project.freecruting.model.Post;
 import com.project.freecruting.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -40,5 +41,11 @@ public class PostController {
     @GetMapping("/api/v1/posts")
     public List<PostListResponseDto> getAllPosts() {
         return postService.findAllDesc();
+    }
+    
+    // 추후에 에러 체크할 것
+    @GetMapping("/api/v1/posts/type")
+    public List<PostListResponseDto> getPostsByType(@RequestParam(required = false) String type) {
+        return postService.findByType(type);
     }
 }

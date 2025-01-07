@@ -42,6 +42,13 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public List<PostListResponseDto> findByType(String type) {
+        return postRepository.findByType(type).stream()
+                .map(PostListResponseDto:: new)
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public void delete(Long id) {
         Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글 없음. id = " + id));
