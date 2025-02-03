@@ -1,5 +1,6 @@
 package com.project.freecruting.controller;
 
+import com.project.freecruting.config.auth.LoginUser;
 import com.project.freecruting.config.auth.dto.SessionUser;
 import com.project.freecruting.dto.post.PostResponseDto;
 import com.project.freecruting.service.PostService;
@@ -19,9 +20,8 @@ public class IndexController {
     private final PostService postService;
     private final HttpSession httpSession;
     @GetMapping("/")
-    public String index(Model model) {
+    public String index(Model model, @LoginUser SessionUser user) {
         model.addAttribute("posts", postService.findAllDesc());
-        SessionUser user = (SessionUser) httpSession.getAttribute("user");
 
         if(user != null) {
             model.addAttribute("userName", user.getName());
