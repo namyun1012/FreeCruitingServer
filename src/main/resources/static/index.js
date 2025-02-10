@@ -19,7 +19,7 @@ var main = {
         var data = {
             title: $('#title').val(),
             author: $('#author').val(),
-            type: 'Type',
+            type: $('#type').val(),
             imageURL: 'imageURL',
             content: $('#content').val()
         };

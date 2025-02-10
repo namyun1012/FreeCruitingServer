@@ -7,6 +7,9 @@ import com.project.freecruting.dto.post.PostUpdateRequestDto;
 import com.project.freecruting.model.Post;
 import com.project.freecruting.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,12 +21,14 @@ public class PostController {
     private final PostService postService;
     // Save 용도
     @PostMapping("/api/v1/post")
-    public Long save(@RequestBody PostSaveRequestDto requestDto) {
-        return postService.save(requestDto);
+    public Long save(@RequestBody PostSaveRequestDto requestDto, @AuthenticationPrincipal OAuth2User oAuth2User) {
+        String author_id = oAuth2User.getAttribute("sub");
+        return postService.save(requestDto, author_id);
     }
 
     @PutMapping("/api/v1/post/{id}")
-    public Long update(@PathVariable Long id, @RequestBody PostUpdateRequestDto requestDto) {
+    public Long update(@PathVariable Long id, @RequestBody PostUpdateRequestDto requestDto, @AuthenticationPrincipal OAuth2User oAuth2User) {
+        String author_id = oAuth2User.getAttribute("sub");
         return postService.update(id, requestDto);
     }
 
@@ -33,7 +38,8 @@ public class PostController {
     }
 
     @DeleteMapping("/api/v1/post/{id}")
-    public Long delete(@PathVariable Long id) {
+    public Long delete(@PathVariable Long id, @AuthenticationPrincipal OAuth2User oAuth2User) {
+        String author_id = oAuth2User.getAttribute("sub");
         postService.delete(id);
         return id;
     }

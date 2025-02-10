@@ -25,14 +25,19 @@ public class Post extends BaseTimeEntity {
 
     private String author;
     private String imageURL;
+    
+    // Google Oauth2User ID 사용
+    private String author_id;
 
+    // private Users Owner;
     @Builder
-    public Post(String title, String content, String author, String imageURL, String type) {
+    public Post(String title, String content, String author, String imageURL, String type, String author_id) {
         this.title      = title;
         this.content    = content;
         this.author     = author;
         this.imageURL   = imageURL;
         this.type       = type;
+        this.author_id  = author_id;
     }
 
     public void update(String title, String content, String imageURL, String type) {
@@ -40,6 +45,5 @@ public class Post extends BaseTimeEntity {
         this.content    = content;
         this.imageURL   = imageURL;
         this.type       = type;
-
     }
 }
