@@ -25,8 +25,15 @@ public class PostService {
     }
 
     @Transactional
-    public Long update(Long id, PostUpdateRequestDto requestDto) {
+    public Long update(Long id, PostUpdateRequestDto requestDto, String author_id) {
         Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글 없음. id=" + id));
+
+        String post_author_id = post.getAuthor_id();
+
+        if (!post_author_id.equals(author_id)) {
+            return 0L;
+        }
+
         post.update(requestDto.getTitle(), requestDto.getContent(), requestDto.getImageURL(), requestDto.getType());
         return id;
     }
@@ -51,8 +58,16 @@ public class PostService {
     }
 
     @Transactional
-    public void delete(Long id) {
+    public Long delete(Long id, String author_id) {
         Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글 없음. id = " + id));
+
+        String post_author_id = post.getAuthor_id();
+
+        if (!post_author_id.equals(author_id)) {
+            return 0L;
+        }
+
         postRepository.delete(post);
+        return id;
     }
 }

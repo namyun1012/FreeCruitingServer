@@ -20,6 +20,20 @@
             {{/userName}}
         </div>
     </div>
+
+    <div class="col-md-6">
+        <div class="input-group">
+            <select id = "search-type" class="form-select">
+                <option value="all">통합 검색</option>
+                <option value="title">제목</option>
+                <option value="content">내용</option>
+                <option value="author">작성자</option>
+            </select>
+            <input type="text" id="search-query" class="form-control" placeholder="검색어 입력">
+            <button id="btn-search" class="btn btn-outline-primary">검색</button>
+            <!-- js 구현, page 만들기 등 필요함 -->
+        </div>
+    </div>
     <!--
     <div class = "row">
         <div class = "col-md-6">
@@ -29,6 +43,7 @@
     -->
     <br>
     <!-- 목록 출력 영역 -->
+    <h2>최신 글</h2>
     <table class="table table-horizontal table-bordered">
         <thead class="thead-strong">
         <tr>
@@ -43,7 +58,7 @@
         {{#posts}}
             <tr>
                 <td>{{id}}</td>
-                <td><a href="/post/update/{{id}}">{{title}}</a></td>
+                <td><a href="/post/read/{{id}}">{{title}}</a></td>
                 <td>{{author}}</td>
                 <td>{{modifiedDate}}</td>
                 <td>{{type}}</td>

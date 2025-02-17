@@ -24,6 +24,11 @@ var main = {
             content: $('#content').val()
         };
 
+        if(!title) {
+            title = '빈 제목';
+        }
+
+
         $.ajax({
             type: 'POST',
             url: '/api/v1/post',
@@ -40,7 +45,7 @@ var main = {
     update : function () {
         var data = {
             title: $('#title').val(),
-            type: 'Type',
+            type: $('#type').val(),
             imageURL: 'imageURL',
             content: $('#content').val()
         };
@@ -53,11 +58,15 @@ var main = {
             dataType: 'json',
             contentType:'application/json; charset=utf-8',
             data: JSON.stringify(data)
-        }).done(function() {
-            alert('Update Post.');
+        }).done(function(response) {
+            alert(response.message);
             window.location.href = '/';
         }).fail(function (error) {
-            alert(JSON.stringify(error));
+            if(error.status === 403) {
+                alert(error.responseJSON.error);
+            } else {
+                alert(JSON.stringify(error));
+            }
         });
     },
     delete : function () {
@@ -68,11 +77,15 @@ var main = {
             url: '/api/v1/post/'+id,
             dataType: 'json',
             contentType:'application/json; charset=utf-8'
-        }).done(function() {
-            alert('Delete Post.');
+        }).done(function(response) {
+            alert(response.message);
             window.location.href = '/';
         }).fail(function (error) {
-            alert(JSON.stringify(error));
+            if(error.status === 403) {
+                alert(error.responseJSON.error);
+            } else {
+                alert(JSON.stringify(error));
+            }
         });
     }
 
