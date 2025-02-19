@@ -3,14 +3,13 @@ package com.project.freecruting.controller;
 import com.project.freecruting.config.auth.LoginUser;
 import com.project.freecruting.config.auth.dto.SessionUser;
 import com.project.freecruting.dto.post.PostResponseDto;
+import com.project.freecruting.model.SearchType;
 import com.project.freecruting.service.PostService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.h2.engine.Mode;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 // 추후 react.js 사용한 것으로 바꿀 것
 // 여기있는 것들은 react에서 못쓸 듯, 임시용도
@@ -53,5 +52,26 @@ public class IndexController {
         PostResponseDto dto = postService.findById(id);
         model.addAttribute("post",dto);
         return "post-read";
+    }
+    
+    // 검색 기능, front 에서 query 와 search_type 받아오기
+    @PostMapping("/post/search")
+    public String searchResult(Model model, @LoginUser SessionUser user, @RequestParam String query, @RequestParam String type) {
+        if(query.isBlank()) {
+            return "redirect:/";
+        }
+
+
+        SearchType searchType = SearchType.fromString(type);
+
+        model.addAttribute("posts", postService.search(query, searchType));
+        model.addAttribute("query", query);
+        model.addAttribute("type", type);
+
+        if(user != null) {
+            model.addAttribute("userName", user.getName());
+        }
+
+        return "post-search";
     }
 }

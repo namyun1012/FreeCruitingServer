@@ -8,30 +8,12 @@
 
 <h1>FreeCruiting</h1>
 <div class = "col-md-12">
-    <div class="row">
-        <div class="col-md-6">
-            <a href="/post/save" role="button" class="btn btn-primary">New Post</a>
-            {{#userName}}
-                Logged in as: <span id="user">{{userName}}</span>
-                <a href="/logout" class="btn btn-info active" role="button">Logout</a>
-            {{/userName}}
-            {{^userName}}
-                <a href="/oauth2/authorization/google" class="btn btn-success active" role="button">Google Login</a>
-            {{/userName}}
-        </div>
-    </div>
 
     {{>layout/search}}
-    <!--
-    <div class = "row">
-        <div class = "col-md-6">
-            <a href="/post/save" role="button" class="btn btn-primary">New Post</a>
-        </div>
-    </div>
-    -->
+
     <br>
     <!-- 목록 출력 영역 -->
-    <h2>전체 글 보기</h2>
+    <h2> {{query}}에 대한 검색 결과</h2>
     <table class="table table-horizontal table-bordered">
         <thead class="thead-strong">
         <tr>

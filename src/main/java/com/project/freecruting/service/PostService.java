@@ -5,11 +5,13 @@ import com.project.freecruting.dto.post.PostResponseDto;
 import com.project.freecruting.dto.post.PostSaveRequestDto;
 import com.project.freecruting.dto.post.PostUpdateRequestDto;
 import com.project.freecruting.model.Post;
+import com.project.freecruting.model.SearchType;
 import com.project.freecruting.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,6 +58,36 @@ public class PostService {
                 .map(PostListResponseDto:: new)
                 .collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
+    public List<PostListResponseDto> search(String query, SearchType searchType) {
+        List<Post> result;
+
+        if(searchType == SearchType.ALL) {
+            result = postRepository.searchByAll(query);
+        }
+
+        else if(searchType == SearchType.TITLE) {
+            result = postRepository.searchByTitle(query);
+        }
+
+        else if(searchType == SearchType.CONTENT) {
+            result = postRepository.searchByContent(query);
+        }
+
+        else if(searchType == SearchType.AUTHOR) {
+            result = postRepository.searchByAuthor(query);
+        }
+
+        else {
+            result = new ArrayList<>();
+        }
+
+        return result.stream()
+                .map(PostListResponseDto:: new)
+                .collect(Collectors.toList());
+    }
+
 
     @Transactional
     public Long delete(Long id, String author_id) {

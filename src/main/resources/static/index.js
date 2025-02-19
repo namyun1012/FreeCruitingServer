@@ -14,6 +14,10 @@ var main = {
         $('#btn-delete').on('click', function () {
             _this.delete();
         });
+
+        $('#btn-search').on('click', function () {
+            _this.search();
+        });
     },
     save : function () {
         var data = {
@@ -24,8 +28,8 @@ var main = {
             content: $('#content').val()
         };
 
-        if(!title) {
-            title = '빈 제목';
+        if(data.title === '') {
+            data.title = '빈 제목';
         }
 
 
@@ -88,7 +92,6 @@ var main = {
             }
         });
     }
-
 };
 
 main.init()

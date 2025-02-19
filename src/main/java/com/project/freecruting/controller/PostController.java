@@ -5,6 +5,7 @@ import com.project.freecruting.dto.post.PostResponseDto;
 import com.project.freecruting.dto.post.PostSaveRequestDto;
 import com.project.freecruting.dto.post.PostUpdateRequestDto;
 import com.project.freecruting.model.Post;
+import com.project.freecruting.model.SearchType;
 import com.project.freecruting.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -68,5 +69,11 @@ public class PostController {
     @GetMapping("/posts/type")
     public List<PostListResponseDto> getPostsByType(@RequestParam(required = false) String type) {
         return postService.findByType(type);
+    }
+
+    @GetMapping("/posts/search")
+    public List<PostListResponseDto> search(@RequestParam String query, @RequestParam String search_type) {
+        SearchType searchType = SearchType.fromString(search_type);
+        return postService.search(query, searchType);
     }
 }
