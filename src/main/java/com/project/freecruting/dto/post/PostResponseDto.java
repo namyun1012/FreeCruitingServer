@@ -21,7 +21,7 @@ public class PostResponseDto {
         this.content = entity.getContent();
         this.author = entity.getAuthor();
         this.imageURL = entity.getImageURL();
-        this.type   = entity.getType();
+        this.type   = entity.getType().toString();
     }
 
 }

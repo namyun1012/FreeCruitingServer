@@ -1,0 +1,22 @@
+<table class="table table-horizontal table-bordered">
+    <thead class="thead-strong">
+    <tr>
+        <th>id</th>
+        <th>title</th>
+        <th>author</th>
+        <th>updateDate</th>
+        <th>type</th>
+    </tr>
+    </thead>
+    <tbody id="tbody">
+    {{#posts}}
+        <tr>
+            <td>{{id}}</td>
+            <td><a href="/post/read/{{id}}">{{title}}</a></td>
+            <td>{{author}}</td>
+            <td>{{modifiedDate}}</td>
+            <td>{{type}}</td>
+        </tr>
+    {{/posts}}
+    </tbody>
+</table>

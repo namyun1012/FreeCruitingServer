@@ -20,8 +20,9 @@ public class Post extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String type;
+    private PostType type;
 
     private String author;
     private String imageURL;
@@ -29,9 +30,21 @@ public class Post extends BaseTimeEntity {
     // Google Oauth2User ID 사용
     private String author_id;
 
+    public enum PostType {
+        PROJECT, STUDY, REVIEW;
+
+        public static PostType fromString(String type) {
+            for (PostType postType : PostType.values()) {
+                if (postType.name().equalsIgnoreCase(type.trim())) {
+                    return postType;
+                }
+            }
+            throw new IllegalArgumentException("Unknown enum constant: " + type);
+        }
+    }
     // private Users Owner;
     @Builder
-    public Post(String title, String content, String author, String imageURL, String type, String author_id) {
+    public Post(String title, String content, String author, String imageURL, PostType type, String author_id) {
         this.title      = title;
         this.content    = content;
         this.author     = author;
@@ -40,7 +53,7 @@ public class Post extends BaseTimeEntity {
         this.author_id  = author_id;
     }
 
-    public void update(String title, String content, String imageURL, String type) {
+    public void update(String title, String content, String imageURL, PostType type) {
         this.title      = title;
         this.content    = content;
         this.imageURL   = imageURL;

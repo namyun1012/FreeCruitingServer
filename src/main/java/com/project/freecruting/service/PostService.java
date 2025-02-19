@@ -36,7 +36,7 @@ public class PostService {
             return 0L;
         }
 
-        post.update(requestDto.getTitle(), requestDto.getContent(), requestDto.getImageURL(), requestDto.getType());
+        post.update(requestDto.getTitle(), requestDto.getContent(), requestDto.getImageURL(), Post.PostType.valueOf(requestDto.getType()));
         return id;
     }
 
@@ -54,7 +54,9 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public List<PostListResponseDto> findByType(String type) {
-        return postRepository.findByType(type).stream()
+        Post.PostType postType = Post.PostType.fromString(type);
+
+        return postRepository.findByType(postType).stream()
                 .map(PostListResponseDto:: new)
                 .collect(Collectors.toList());
     }

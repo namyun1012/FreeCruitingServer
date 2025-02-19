@@ -34,7 +34,7 @@ public class PostSaveRequestDto {
                 .content(content)
                 .author(author)
                 .imageURL(imageURL)
-                .type(type)
+                .type(Post.PostType.fromString(type))
                 .author_id(author_id)
                 .build();
     }

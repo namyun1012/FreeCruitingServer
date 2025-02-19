@@ -20,7 +20,7 @@ public class PostListResponseDto {
         this.title = entity.getTitle();
         this.author =entity.getAuthor();
         this.imageURL = entity.getImageURL();
-        this.type = entity.getType();
+        this.type = entity.getType().toString();
         this.modifiedDate = entity.getModifiedDate();
         this.content = entity.getContent();
     }

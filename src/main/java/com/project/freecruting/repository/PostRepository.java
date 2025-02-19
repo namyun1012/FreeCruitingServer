@@ -13,7 +13,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findAllDesc();
 
     @Query("SELECT p FROM Post p Where p.type = :type ORDER BY p.id DESC")
-    List<Post> findByType(@Param("type") String type);
+    List<Post> findByType(@Param("type") Post.PostType type);
 
     @Query("SELECT p FROM Post p WHERE p.title LIKE CONCAT('%', :query, '%')")
     List<Post> searchByTitle(@Param("query") String query);
