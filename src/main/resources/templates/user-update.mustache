@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>FreeCruiting</title>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+</head>
+<body>
+
+<h1>Update User</h1>
+
+<div class="col-md-12">
+    <div class="col-md-4">
+        <form>
+            <div class="form-group">
+                <label for="title">Name</label>
+                <input type="text" class="form-control" id="name" value="{{userName}}">
+            </div>
+            <div class="form-group">
+                <label for="title">Email</label>
+                <input type="text" class="form-control" id="email" value="{{userEmail}}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="author">Picture</label>
+                <input type="text" class="form-control" id="picture" value="{{userPicture}}">
+            </div>
+        </form>
+        <a href="/" role="button" class="btn btn-secondary">Cancel</a>
+        <button type="button" class="btn btn-primary" id="btn-update-user">Update Complete</button>
+    </div>
+</div>
+
+{{>layout/footer}}

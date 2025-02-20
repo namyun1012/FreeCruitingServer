@@ -5,6 +5,7 @@ import com.project.freecruting.config.auth.dto.SessionUser;
 import com.project.freecruting.dto.post.PostResponseDto;
 import com.project.freecruting.model.SearchType;
 import com.project.freecruting.service.PostService;
+import com.project.freecruting.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -61,7 +62,6 @@ public class IndexController {
             return "redirect:/";
         }
 
-
         SearchType searchType = SearchType.fromString(type);
 
         model.addAttribute("posts", postService.search(query, searchType));
@@ -73,5 +73,19 @@ public class IndexController {
         }
 
         return "post-search";
+    }
+
+    @GetMapping("/user/update")
+    public String userUpdate(Model model, @LoginUser SessionUser user)
+    {
+        if(user == null) {
+            return "/";
+        }
+
+        model.addAttribute("userName", user.getName());
+        model.addAttribute("userEmail", user.getEmail());
+        model.addAttribute("userPicture", user.getPicture());
+
+        return "user-update";
     }
 }

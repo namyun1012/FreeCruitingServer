@@ -1,4 +1,4 @@
-package com.project.freecruting.dto.post;
+package com.project.freecruting.dto.user;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -8,13 +8,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserUpdateRequestDto {
     private String name;
-    private String email;
     private String picture;
 
     @Builder
-    public UserUpdateRequestDto(String name, String email, String picture) {
+    public UserUpdateRequestDto(String name, String picture) {
         this.name = name;
-        this.email = email;
         this.picture = picture;
     }
 }

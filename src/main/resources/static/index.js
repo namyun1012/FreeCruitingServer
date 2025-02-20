@@ -15,8 +15,8 @@ var main = {
             _this.delete();
         });
 
-        $('#btn-search').on('click', function () {
-            _this.search();
+        $('#btn-update-user').on('click', function () {
+            _this.updateUser();
         });
     },
     save : function () {
@@ -91,7 +91,27 @@ var main = {
                 alert(JSON.stringify(error));
             }
         });
-    }
+    },
+
+    updateUser : function () {
+        var data = {
+            name: $('#name').val(),
+            picture: $('#picture').val(),
+        };
+
+        $.ajax({
+            type: 'PUT',
+            url: '/api/v1/user/update',
+            dataType: 'json',
+            contentType:'application/json; charset=utf-8',
+            data: JSON.stringify(data)
+        }).done(function(response) {
+            alert(response.message);
+            window.location.href = '/';
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+    },
 };
 
 main.init()
