@@ -16,10 +16,10 @@ public class PostSaveRequestDto {
     private String type;
 
     @Setter
-    private String author_id;
+    private Long author_id;
 
     @Builder
-    public PostSaveRequestDto(String title, String content, String author, String  imageURL, String type, String author_id) {
+    public PostSaveRequestDto(String title, String content, String author, String  imageURL, String type, Long author_id) {
         this.type = type;
         this.title = title;
         this.content = content;

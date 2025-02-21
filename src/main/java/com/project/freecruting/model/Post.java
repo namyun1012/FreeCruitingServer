@@ -28,7 +28,7 @@ public class Post extends BaseTimeEntity {
     private String imageURL;
     
     // Google Oauth2User ID 사용
-    private String author_id;
+    private Long author_id;
 
     public enum PostType {
         PROJECT, STUDY, REVIEW;
@@ -44,7 +44,7 @@ public class Post extends BaseTimeEntity {
     }
     // private Users Owner;
     @Builder
-    public Post(String title, String content, String author, String imageURL, PostType type, String author_id) {
+    public Post(String title, String content, String author, String imageURL, PostType type, Long author_id) {
         this.title      = title;
         this.content    = content;
         this.author     = author;

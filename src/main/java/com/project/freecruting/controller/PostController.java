@@ -1,5 +1,7 @@
 package com.project.freecruting.controller;
 
+import com.project.freecruting.config.auth.LoginUser;
+import com.project.freecruting.config.auth.dto.SessionUser;
 import com.project.freecruting.dto.post.PostListResponseDto;
 import com.project.freecruting.dto.post.PostResponseDto;
 import com.project.freecruting.dto.post.PostSaveRequestDto;
@@ -26,15 +28,16 @@ public class PostController {
     private final PostService postService;
     // Save 용도
     @PostMapping("/post")
-    public Long save(@RequestBody PostSaveRequestDto requestDto, @AuthenticationPrincipal OAuth2User oAuth2User) {
-        String author_id = oAuth2User.getAttribute("sub");
+    public Long save(@RequestBody PostSaveRequestDto requestDto, @LoginUser SessionUser user) {
+        Long author_id = user.getId();
         return postService.save(requestDto, author_id);
     }
 
     @PutMapping("/post/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody PostUpdateRequestDto requestDto, @AuthenticationPrincipal OAuth2User oAuth2User) {
-        String author_id = oAuth2User.getAttribute("sub");
-
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody PostUpdateRequestDto requestDto, @LoginUser SessionUser user) {
+        // String author_id = oAuth2User.getAttribute("sub");
+        // author_id 저장하는 것으로 바꾸기
+        Long author_id = user.getId();
         Long result = postService.update(id, requestDto, author_id);
 
         if(result == 0L) {
@@ -50,8 +53,8 @@ public class PostController {
     }
 
     @DeleteMapping("/post/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id, @AuthenticationPrincipal OAuth2User oAuth2User) {
-        String author_id = oAuth2User.getAttribute("sub");
+    public ResponseEntity<?> delete(@PathVariable Long id, @LoginUser SessionUser user) {
+        Long author_id = user.getId();
         Long result = postService.delete(id, author_id);
 
         if(result == 0L) {
