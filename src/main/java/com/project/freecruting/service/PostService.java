@@ -29,7 +29,6 @@ public class PostService {
     @Transactional
     public Long update(Long id, PostUpdateRequestDto requestDto, Long author_id) {
         Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글 없음. id=" + id));
-
         Long post_author_id = post.getAuthor_id();
 
         if (!post_author_id.equals(author_id)) {

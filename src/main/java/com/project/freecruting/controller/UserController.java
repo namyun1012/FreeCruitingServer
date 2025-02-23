@@ -23,7 +23,7 @@ public class UserController {
     private final UserService userService;
     private final HttpSession httpSession;
 
-    @PutMapping("/user/update")
+    @PutMapping("/user")
     public ResponseEntity<?> update(@RequestBody UserUpdateRequestDto requestDto, @AuthenticationPrincipal OAuth2User oAuth2User) {
         String email = oAuth2User.getAttribute("email");
         Users user = userService.update(requestDto, email);

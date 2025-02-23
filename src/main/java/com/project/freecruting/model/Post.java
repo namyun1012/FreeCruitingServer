@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 @Entity
@@ -29,6 +31,9 @@ public class Post extends BaseTimeEntity {
     
     // Google Oauth2User ID 사용
     private Long author_id;
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Comment> comments;
 
     public enum PostType {
         PROJECT, STUDY, REVIEW;

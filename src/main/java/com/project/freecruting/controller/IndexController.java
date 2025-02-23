@@ -49,7 +49,7 @@ public class IndexController {
     }
 
     @GetMapping("/post/read/{id}")
-    public String postRead(@PathVariable Long id, Model model) {
+    public String postRead(@PathVariable Long id, Model model, @LoginUser SessionUser user) {
         PostResponseDto dto = postService.findById(id);
         model.addAttribute("post",dto);
         return "post-read";

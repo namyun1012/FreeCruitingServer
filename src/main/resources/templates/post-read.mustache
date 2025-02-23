@@ -33,4 +33,76 @@
     </div>
 </div>
 
+<!-- 댓글 Section -->
+<div class="col-md-12 mt-4">
+    <h2>Comments</h2>
+
+    {{#post.comments}}
+        <div class="card mb-3">
+            <div class="card-header">
+                <strong>{{author}}</strong> says:
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{content}}</p>
+
+                <!-- 댓글 수정 및 삭제 버튼 -->
+                <button class="btn btn-sm btn-primary" onclick="editComment({{id}}, '{{content}}')">Edit</button>
+                <a href="/comment/delete/{{id}}" class="btn btn-sm btn-danger">Delete</a>
+            </div>
+        </div>
+    {{/post.comments}}
+    {{^post.comments}}
+        <p>No comments yet.</p>
+    {{/post.comments}}
+</div>
+
+<!-- 댓글 작성 폼 -->
+<div class="col-md-12 mt-4">
+    <h3>Add a Comment</h3>
+    <form>
+        <input type="hidden" id="post_id" value="{{post.id}}">
+        <div class="form-group">
+            <label for="comment_content">Comment</label>
+            <textarea class="form-control" id="comment_content" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-success" id="btn-save-comment">Submit</button>
+    </form>
+</div>
+
+<!-- 댓글 수정 모달 -->
+<!-- API 수정 할 것 -->
+
+<div id="editCommentModal" class="modal" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Comment</h5>
+                <button type="button" class="close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editCommentForm" action="/comment/update" method="POST">
+                    <input type="hidden" name="comment_id" id="editCommentId">
+                    <div class="form-group">
+                        <label for="editCommentContent">Comment</label>
+                        <textarea class="form-control" name="content" id="editCommentContent" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function editComment(id, content) {
+        document.getElementById("editCommentId").value = id;
+        document.getElementById("editCommentContent").value = content;
+        document.getElementById("editCommentModal").style.display = "block";
+    }
+
+    function closeModal() {
+        document.getElementById("editCommentModal").style.display = "none";
+    }
+</script>
+
 {{>layout/footer}}
