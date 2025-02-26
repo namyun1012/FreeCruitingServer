@@ -46,8 +46,9 @@
                 <p class="card-text">{{content}}</p>
 
                 <!-- 댓글 수정 및 삭제 버튼 -->
+                <!-- 클릭 시 댓글 수정 모달이 나옴 -->
                 <button class="btn btn-sm btn-primary" onclick="editComment({{id}}, '{{content}}')">Edit</button>
-                <a href="/comment/delete/{{id}}" class="btn btn-sm btn-danger">Delete</a>
+                <button class="btn btn-sm btn-danger" onclick="deleteComment({{id}})">Delete</button>
             </div>
         </div>
     {{/post.comments}}
@@ -60,18 +61,15 @@
 <div class="col-md-12 mt-4">
     <h3>Add a Comment</h3>
     <form>
-        <input type="hidden" id="post_id" value="{{post.id}}">
         <div class="form-group">
             <label for="comment_content">Comment</label>
-            <textarea class="form-control" id="comment_content" required></textarea>
+            <textarea class="form-control" id="comment-content-save" required></textarea>
         </div>
-        <button type="submit" class="btn btn-success" id="btn-save-comment">Submit</button>
+        <button type="submit" class="btn btn-success" onclick="saveComment({{post.id}})">Submit</button>
     </form>
 </div>
 
 <!-- 댓글 수정 모달 -->
-<!-- API 수정 할 것 -->
-
 <div id="editCommentModal" class="modal" style="display: none;">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -80,13 +78,13 @@
                 <button type="button" class="close" onclick="closeModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="editCommentForm" action="/comment/update" method="POST">
-                    <input type="hidden" name="comment_id" id="editCommentId">
+                <form>
+                    <input type="hidden" name="comment_id" id="comment-id-update">
                     <div class="form-group">
                         <label for="editCommentContent">Comment</label>
-                        <textarea class="form-control" name="content" id="editCommentContent" required></textarea>
+                        <textarea class="form-control" name="content" id="comment-content-update" required></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button type="submit" class="btn btn-primary" onclick="updateComment()">Update</button>
                 </form>
             </div>
         </div>
@@ -95,8 +93,8 @@
 
 <script>
     function editComment(id, content) {
-        document.getElementById("editCommentId").value = id;
-        document.getElementById("editCommentContent").value = content;
+        document.getElementById("comment-id-update").value = id;
+        document.getElementById("comment-content-update").value = content;
         document.getElementById("editCommentModal").style.display = "block";
     }
 

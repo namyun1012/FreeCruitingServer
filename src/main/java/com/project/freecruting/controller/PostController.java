@@ -10,6 +10,7 @@ import com.project.freecruting.model.Post;
 import com.project.freecruting.model.SearchType;
 import com.project.freecruting.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -62,7 +63,8 @@ public class PostController {
         }
         return ResponseEntity.ok(Map.of("message", "Delete successful"));
     }
-
+    
+    // 전체 Post 받아오기
     @GetMapping("/posts")
     public List<PostListResponseDto> getAllPosts() {
         return postService.findAllDesc();
@@ -73,10 +75,21 @@ public class PostController {
     public List<PostListResponseDto> getPostsByType(@RequestParam(required = false) String type) {
         return postService.findByType(type);
     }
-
+    
+    // Post 검색 결과
     @GetMapping("/posts/search")
     public List<PostListResponseDto> search(@RequestParam String query, @RequestParam String search_type) {
         SearchType searchType = SearchType.fromString(search_type);
         return postService.search(query, searchType);
+    }
+
+    // Page 사용,
+    @GetMapping("/posts/page")
+    public ResponseEntity<Page<PostListResponseDto>> getAllPostsPage (
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Page<PostListResponseDto> postPages = postService.findAllPage(page, size);
+        return ResponseEntity.ok(postPages);
     }
 }

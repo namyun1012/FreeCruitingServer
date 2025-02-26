@@ -1,0 +1,29 @@
+<!-- 페이지네이션 -->
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        <!-- 이전 버튼 -->
+        {{#hasPrevPage}}
+            <li class="page-item">
+                <a class="page-link" href="?page={{prevPage}}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+        {{/hasPrevPage}}
+
+        <!-- 숫자 버튼 -->
+        {{#pages}}
+            <li class="page-item {{#isCurrent}}active{{/isCurrent}}">
+                <a class="page-link" href="?page={{number}}">{{number}}</a>
+            </li>
+        {{/pages}}
+
+        <!-- 다음 버튼 -->
+        {{#hasNextPage}}
+            <li class="page-item">
+                <a class="page-link" href="?page={{nextPage}}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        {{/hasNextPage}}
+    </ul>
+</nav>

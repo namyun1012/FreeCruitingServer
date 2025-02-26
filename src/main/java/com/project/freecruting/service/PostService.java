@@ -8,6 +8,10 @@ import com.project.freecruting.model.Post;
 import com.project.freecruting.model.SearchType;
 import com.project.freecruting.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +43,20 @@ public class PostService {
         return id;
     }
 
+    @Transactional
+    public Long delete(Long id, Long author_id) {
+        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글 없음. id = " + id));
+
+        Long post_author_id = post.getAuthor_id();
+
+        if (!post_author_id.equals(author_id)) {
+            return 0L;
+        }
+
+        postRepository.delete(post);
+        return id;
+    }
+
     public PostResponseDto findById(Long id) {
         Post entity = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글 없음. id=" + id));
         return new PostResponseDto(entity);
@@ -49,6 +67,14 @@ public class PostService {
         return postRepository.findAllDesc().stream()
                 .map(PostListResponseDto:: new)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<PostListResponseDto> findAllPage(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        return postRepository.findAllByOrderByModifiedDateDesc(pageable)
+                .map(PostListResponseDto::new);
     }
 
     @Transactional(readOnly = true)
@@ -87,20 +113,5 @@ public class PostService {
         return result.stream()
                 .map(PostListResponseDto:: new)
                 .collect(Collectors.toList());
-    }
-
-
-    @Transactional
-    public Long delete(Long id, Long author_id) {
-        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글 없음. id = " + id));
-
-        Long post_author_id = post.getAuthor_id();
-
-        if (!post_author_id.equals(author_id)) {
-            return 0L;
-        }
-
-        postRepository.delete(post);
-        return id;
     }
 }

@@ -23,6 +23,9 @@ var main = {
             _this.saveComment();
         });
 
+        $('#btn-update-comment').on('click', function () {
+            _this.updateComment();
+        });
     },
     save : function () {
         var data = {
@@ -117,12 +120,12 @@ var main = {
             alert(JSON.stringify(error));
         });
     },
-
-
-    saveComment : function () {
+};
+// Comment 함수는 이렇게 하는  것이 더 적절한 듯
+function saveComment(post_id) {
         var data = {
-            post_id: $('#post_id').val(),
-            content: $('#comment_content').val()
+            post_id: post_id,
+            content: $('#comment-content-save').val()
         };
 
         $.ajax({
@@ -133,11 +136,51 @@ var main = {
             data: JSON.stringify(data)
         }).done(function() {
             alert('Register New Comment.');
-            window.location.href = `/post/read/${data.post_id}`;
+            location.reload();
+            //window.location.href = `/post/read/${data.post_id}`;
         }).fail(function (error) {
             alert(JSON.stringify(error));
         });
-    },
-};
+}
+
+function updateComment() {
+        var comment_id = $('#comment-id-update').val()
+
+        var data = {
+            content: $('#comment-content-update').val()
+        };
+
+        $.ajax({
+            type: 'PUT',
+            url: '/api/v1/comment/' + comment_id,
+            dataType: 'json',
+            contentType:'application/json; charset=utf-8',
+            data: JSON.stringify(data)
+        }).done(function() {
+            alert('Update Comment.');
+            location.reload();
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+}
+
+
+
+function deleteComment(comment_id) {
+    if (!confirm("Are you sure you want to delete this comment?")) return;
+
+    $.ajax({
+        type: 'DELETE',
+        url: '/api/v1/comment/' + comment_id, // 댓글 ID를 URL에 추가
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8'
+    }).done(function() {
+        alert('Comment deleted successfully.');
+        location.reload(); // 페이지 새로고침
+    }).fail(function(error) {
+        alert("Error deleting comment: " + JSON.stringify(error));
+    });
+}
+
 
 main.init()
