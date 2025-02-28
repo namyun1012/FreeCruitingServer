@@ -37,7 +37,7 @@
 <div class="col-md-12 mt-4">
     <h2>Comments</h2>
 
-    {{#post.comments}}
+    {{#comments}}
         <div class="card mb-3">
             <div class="card-header">
                 <strong>{{author}}</strong> says:
@@ -51,11 +51,16 @@
                 <button class="btn btn-sm btn-danger" onclick="deleteComment({{id}})">Delete</button>
             </div>
         </div>
-    {{/post.comments}}
-    {{^post.comments}}
+    {{/comments}}
+    {{^comments}}
         <p>No comments yet.</p>
-    {{/post.comments}}
+    {{/comments}}
+
+    {{>layout/pages}}
 </div>
+
+<!-- 댓글 페이지 -->
+
 
 <!-- 댓글 작성 폼 -->
 <div class="col-md-12 mt-4">
@@ -90,6 +95,8 @@
         </div>
     </div>
 </div>
+
+
 
 <script>
     function editComment(id, content) {

@@ -4,22 +4,23 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @NoArgsConstructor
 @Entity
-public class Party {
+public class Party extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    private long id;
 
-    String name;
+    @Column(nullable = false)
+    private String name;
 
-    //@OneToMany(mappedBy = "party", cascade = CascadeType.ALL, orphanRemoval = true)
-    //private List<Partymember> partyMembers = new ArrayList<>();
+    @OneToMany(mappedBy = "party", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PartyMember> partyMembers;
+
 
     // createdAt, updatedAt 추가 필요
 

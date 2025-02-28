@@ -2,13 +2,16 @@ package com.project.freecruting.controller;
 
 import com.project.freecruting.config.auth.LoginUser;
 import com.project.freecruting.config.auth.dto.SessionUser;
+import com.project.freecruting.dto.comment.CommentListResponseDto;
 import com.project.freecruting.dto.comment.CommentSaveRequestDto;
 import com.project.freecruting.dto.comment.CommentUpdateRequestDto;
+import com.project.freecruting.dto.post.PostListResponseDto;
 import com.project.freecruting.dto.post.PostSaveRequestDto;
 import com.project.freecruting.dto.post.PostUpdateRequestDto;
 import com.project.freecruting.service.CommentService;
 import com.project.freecruting.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -59,5 +62,17 @@ public class CommentController {
         }
 
         return ResponseEntity.ok(Map.of("message", "Delete successful"));
+    }
+    
+    
+    // Page API 는 추가해 놓음
+    @GetMapping("/posts/page/{post_id}")
+    public ResponseEntity<Page<CommentListResponseDto>> getAllPostsPage (
+            @PathVariable Long post_id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Page<CommentListResponseDto> commentPages = commentService.findAllPageByPostId(page, size, post_id);
+        return ResponseEntity.ok(commentPages);
     }
 }

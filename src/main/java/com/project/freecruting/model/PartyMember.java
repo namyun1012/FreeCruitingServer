@@ -7,14 +7,18 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Entity
-public class Partymember {
+public class PartyMember {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // private Users user;
+    @ManyToOne
+    @JoinColumn(name = "users_id", nullable = false)
+    private Users user;
 
-    // private Party party;
+    @ManyToOne
+    @JoinColumn(name = "party_id", nullable = false)
+    private Party party;
 
     @Enumerated(EnumType.STRING)
     private Party_role party_role;

@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 @Entity
@@ -28,6 +30,9 @@ public class Users extends BaseTimeEntity{
     private Role role;
 
     // Party 등의 추가?
+    @OneToMany(mappedBy = "user")
+    private List<PartyMember> partyMembers;
+
     @Builder
     public Users(String name, String email, String picture, Role role) {
         this.name = name;

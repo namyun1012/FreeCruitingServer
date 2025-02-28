@@ -27,16 +27,16 @@ public class Post extends BaseTimeEntity {
     private PostType type;
 
     private String author;
+
     private String imageURL;
-    
-    // Google Oauth2User ID 사용
+
     private Long author_id;
 
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Comment> comments;
 
     public enum PostType {
-        PROJECT, STUDY, REVIEW;
+        PROJECT, STUDY, REVIEW, ANNOUNCEMENT;
 
         public static PostType fromString(String type) {
             for (PostType postType : PostType.values()) {

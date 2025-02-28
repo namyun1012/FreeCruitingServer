@@ -13,6 +13,9 @@ import com.project.freecruting.repository.CommentRepository;
 import com.project.freecruting.repository.PostRepository;
 import com.project.freecruting.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +34,14 @@ public class CommentService {
         return commentRepository.findByPostId(post_id).stream()
                 .map(CommentListResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<CommentListResponseDto> findAllPageByPostId(int page, int size, Long post_id) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        return commentRepository.findAllByPostIdOrderByModifiedDateDesc(post_id, pageable)
+                .map(CommentListResponseDto::new);
     }
 
     @Transactional
