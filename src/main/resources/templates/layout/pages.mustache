@@ -11,8 +11,19 @@
         {{/hasPrevPage}}
 
         <!-- 추후에 숫자 추가 해 주자 -->
+        {{#pages}}
+            <li class="page-item {{#isCurrent}}active{{/isCurrent}}">
+                {{#isCurrent}}
+                    <span class="page-link">{{number}}</span> <!-- 현재 페이지 강조 -->
+                {{/isCurrent}}
+                {{^isCurrent}}
+                    <a class="page-link" href="?page={{number}}">{{number}}</a> <!-- 다른 페이지 링크 -->
+                {{/isCurrent}}
+            </li>
+        {{/pages}}
 
-        <!-- 다음 버튼 -->
+
+            <!-- 다음 버튼 -->
         {{#hasNextPage}}
             <li class="page-item">
                 <a class="page-link" href="?page={{nextPage}}" aria-label="Next">

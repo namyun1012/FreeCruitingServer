@@ -87,31 +87,31 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostListResponseDto> search(String query, SearchType searchType) {
-        List<Post> result;
+    public Page<PostListResponseDto> search(String query, SearchType searchType, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<PostListResponseDto> result;
 
         if(searchType == SearchType.ALL) {
-            result = postRepository.searchByAll(query);
+            result = postRepository.findByTitleOrContentOrAuthor(query, query, query, pageable).map(PostListResponseDto::new);
         }
 
         else if(searchType == SearchType.TITLE) {
-            result = postRepository.searchByTitle(query);
+            result = postRepository.findByTitle(query, pageable).map(PostListResponseDto::new);
         }
 
         else if(searchType == SearchType.CONTENT) {
-            result = postRepository.searchByContent(query);
+            result = postRepository.findByContent(query, pageable).map(PostListResponseDto::new);
         }
 
         else if(searchType == SearchType.AUTHOR) {
-            result = postRepository.searchByAuthor(query);
+            result = postRepository.findByAuthor(query, pageable).map(PostListResponseDto::new);
         }
-
+        
+        // 이상한 값일 때  검색
         else {
-            result = new ArrayList<>();
+            result = postRepository.findByTitleOrContentOrAuthor(query, query, query, pageable).map(PostListResponseDto::new);
         }
 
-        return result.stream()
-                .map(PostListResponseDto:: new)
-                .collect(Collectors.toList());
+        return result;
     }
 }

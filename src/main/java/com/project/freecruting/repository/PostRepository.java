@@ -19,21 +19,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("SELECT p FROM Post p Where p.type = :type ORDER BY p.id DESC")
     List<Post> findByType(@Param("type") Post.PostType type);
 
-    @Query("SELECT p FROM Post p WHERE p.title LIKE CONCAT('%', :query, '%')")
-    List<Post> searchByTitle(@Param("query") String query);
 
-    @Query("SELECT p FROM Post p WHERE p.content LIKE CONCAT('%', :query, '%')")
-    List<Post> searchByContent(@Param("query") String query);
+    Page<Post> findByTitle(String title, Pageable pageable);
+    Page<Post> findByContent(String content, Pageable pageable);
 
-    @Query("SELECT p FROM Post p WHERE p.author LIKE CONCAT('%', :query, '%')")
-    List<Post> searchByAuthor(@Param("query") String query);
+    Page<Post> findByAuthor(String author, Pageable pageable);
 
-    // JPQL 에서는 UNION 이 존재하지 않아서 native query 로 처리함.
-    @Query(value = "SELECT * FROM post p WHERE p.title LIKE CONCAT('%', :query, '%')" +
-            "UNION SELECT * FROM post p WHERE p.content LIKE CONCAT('%', :query, '%')" +
-            "UNION SELECT * FROM post p WHERE p.author LIKE CONCAT('%', :query, '%')",
-            nativeQuery = true)
-    List<Post> searchByAll(@Param("query") String query);
+    Page<Post> findByTitleOrContentOrAuthor(String title, String content, String author, Pageable pageable);
 
     // Page 처리
     Page<Post> findAll(Pageable pageable);

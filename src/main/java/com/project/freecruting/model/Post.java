@@ -47,7 +47,7 @@ public class Post extends BaseTimeEntity {
             throw new IllegalArgumentException("Unknown enum constant: " + type);
         }
     }
-    // private Users Owner;
+
     @Builder
     public Post(String title, String content, String author, String imageURL, PostType type, Long author_id) {
         this.title      = title;

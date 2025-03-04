@@ -1,6 +1,7 @@
 package com.project.freecruting.model;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,12 +19,25 @@ public class Party extends BaseTimeEntity {
     @Column(nullable = false)
     private String name;
 
+    private String description;
+
     @OneToMany(mappedBy = "party", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PartyMember> partyMembers;
 
+    // USER_ID
+    private Long owner_id;
 
-    // createdAt, updatedAt 추가 필요
+    @Builder
+    public Party(String name, String description, Long owner_id) {
+        this.name = name;
+        this.description = description;
+        this.owner_id = owner_id;
+    }
 
+    public void update(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 
 
 }

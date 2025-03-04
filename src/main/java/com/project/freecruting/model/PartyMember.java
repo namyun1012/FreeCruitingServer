@@ -20,11 +20,8 @@ public class PartyMember {
     @JoinColumn(name = "party_id", nullable = false)
     private Party party;
 
-    @Enumerated(EnumType.STRING)
-    private Party_role party_role;
+    // 그냥 자유로 설정 가능하게
+    private String party_role;
 
-    public enum Party_role {
-        LEADER,
-        MEMBER
-    }
+
 }

@@ -17,6 +17,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 // 추후 react.js 사용한 것으로 바꿀 것
 // 여기있는 것들은 react에서 못쓸 듯, 임시용도
 @RequiredArgsConstructor
@@ -31,14 +38,7 @@ public class IndexController {
         Page<PostListResponseDto> postPage = postService.findAllPage(page, size);
 
         model.addAttribute("posts", postPage.getContent());
-        
-        // 페이지 위한 용도
-        model.addAttribute("currentPage", postPage.getNumber());
-        model.addAttribute("totalPages", postPage.getTotalPages());
-        model.addAttribute("hasPrevPage", postPage.hasPrevious());
-        model.addAttribute("hasNextPage", postPage.hasNext());
-        model.addAttribute("prevPage", Math.max(0, postPage.getNumber() - 1));
-        model.addAttribute("nextPage", postPage.getNumber() + 1);
+        model = supportPaging(model, postPage);
 
         if(user != null) {
             model.addAttribute("userName", user.getName());
@@ -74,28 +74,27 @@ public class IndexController {
         // 댓글 Paging 넣어 주기
         Page<CommentListResponseDto> commentPage = commentService.findAllPageByPostId(page, size, id);
 
+        model = supportPaging(model, commentPage);
         model.addAttribute("comments", commentPage.getContent());
 
-        model.addAttribute("currentPage", commentPage.getNumber());
-        model.addAttribute("totalPages", commentPage.getTotalPages());
-        model.addAttribute("hasPrevPage", commentPage.hasPrevious());
-        model.addAttribute("hasNextPage", commentPage.hasNext());
-        model.addAttribute("prevPage", Math.max(0, commentPage.getNumber() - 1));
-        model.addAttribute("nextPage", commentPage.getNumber() + 1);
 
         return "post-read";
     }
     
     // 검색 기능, front 에서 query 와 search_type 받아오기
-    @PostMapping("/post/search")
-    public String searchResult(Model model, @LoginUser SessionUser user, @RequestParam String query, @RequestParam String type) {
+    @GetMapping("/post/search/{type}/{query}")
+    public String searchResult(Model model, @LoginUser SessionUser user, @PathVariable String query, @PathVariable String type,
+                               @RequestParam(defaultValue = "0") int page,
+                               @RequestParam(defaultValue = "5") int size) {
         if(query.isBlank()) {
             return "redirect:/";
         }
 
         SearchType searchType = SearchType.fromString(type);
+        Page<PostListResponseDto> postPage = postService.search(query, searchType, page, size);
+        model.addAttribute("posts", postPage.getContent());
+        model = supportPaging(model, postPage);
 
-        model.addAttribute("posts", postService.search(query, searchType));
         model.addAttribute("query", query);
         model.addAttribute("type", type);
 
@@ -118,5 +117,27 @@ public class IndexController {
         model.addAttribute("userPicture", user.getPicture());
 
         return "user-update";
+    }
+
+    // Paging 사용시 Page Support 하기 위함
+    private Model supportPaging(Model model, Page<?> page) {
+        model.addAttribute("currentPage", page.getNumber());
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("hasPrevPage", page.hasPrevious());
+        model.addAttribute("hasNextPage", page.hasNext());
+        model.addAttribute("prevPage", Math.max(0, page.getNumber() - 1));
+        model.addAttribute("nextPage", page.getNumber() + 1);
+
+        List<Map<String, Object>> pages = IntStream.range(0, page.getTotalPages())
+                .mapToObj(i -> {
+                    Map<String, Object> pageInfo = new HashMap<>();
+                    pageInfo.put("number", i);
+                    pageInfo.put("isCurrent", i == page.getNumber());
+                    return pageInfo;
+                })
+                .collect(Collectors.toList());
+
+        model.addAttribute("pages", pages);
+        return model;
     }
 }

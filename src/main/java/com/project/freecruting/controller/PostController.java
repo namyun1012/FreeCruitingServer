@@ -77,10 +77,14 @@ public class PostController {
     }
     
     // Post 검색 결과
-    @GetMapping("/posts/search")
-    public List<PostListResponseDto> search(@RequestParam String query, @RequestParam String search_type) {
-        SearchType searchType = SearchType.fromString(search_type);
-        return postService.search(query, searchType);
+    @GetMapping("/posts/search/{type}/{query}")
+    public ResponseEntity<Page<PostListResponseDto>> search(@PathVariable String query, @PathVariable String type,
+                                            @RequestParam(defaultValue = "0") int page,
+                                            @RequestParam(defaultValue = "10") int size) {
+        SearchType searchType = SearchType.fromString(type);
+
+        Page<PostListResponseDto> postPages = postService.search(query, searchType, page, size);
+        return ResponseEntity.ok(postPages);
     }
 
     // Page 사용,
