@@ -78,12 +78,13 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostListResponseDto> findByType(String type) {
+    public Page<PostListResponseDto> findByType(String type, int page, int size) {
         Post.PostType postType = Post.PostType.fromString(type);
+        Pageable pageable = PageRequest.of(page, size);
 
-        return postRepository.findByType(postType).stream()
-                .map(PostListResponseDto:: new)
-                .collect(Collectors.toList());
+
+        return postRepository.findByTypeOrderByModifiedDateDesc(pageable, postType)
+                .map(PostListResponseDto:: new);
     }
 
     @Transactional(readOnly = true)

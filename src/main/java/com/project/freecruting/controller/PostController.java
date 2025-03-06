@@ -72,8 +72,13 @@ public class PostController {
 
     // type 별 Post 받아오기, 아직 미 사용 중 추후에 에러 체크할 것
     @GetMapping("/posts/type")
-    public List<PostListResponseDto> getPostsByType(@RequestParam(required = false) String type) {
-        return postService.findByType(type);
+    public ResponseEntity<Page<PostListResponseDto>> getPostsByType(
+            @RequestParam String type,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<PostListResponseDto> postPages = postService.findByType(type, page, size);
+
+        return ResponseEntity.ok(postPages);
     }
     
     // Post 검색 결과

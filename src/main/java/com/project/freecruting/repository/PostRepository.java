@@ -30,4 +30,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     // Page 처리
     Page<Post> findAll(Pageable pageable);
     Page<Post> findAllByOrderByModifiedDateDesc(Pageable pageable);
+
+    Page<Post> findByTypeOrderByModifiedDateDesc(Pageable pageable, Post.PostType type);
 }

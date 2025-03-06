@@ -14,7 +14,7 @@
             {{#userName}}
                 Logged in as: <span id="user">{{userName}}</span>
                 <a href="/logout" class="btn btn-info active" role="button">Logout</a>
-                <a href="/user/update" class="btn btn-info active" role="button">User Update</a>
+                <a href="/user/update" class="btn btn-info active" role="button">User</a>
             {{/userName}}
             {{^userName}}
                 <a href="/oauth2/authorization/google" class="btn btn-success active" role="button">Google Login</a>
@@ -26,7 +26,27 @@
 
     <br>
     <!-- 목록 출력 영역 -->
-    <h2>전체 글 보기</h2>
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link" href="/">All</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/posts/announcement">Announcement</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/posts/project">Project</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/posts/study">Study</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/posts/review">Review</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/party">Party</a>
+        </li>
+    </ul>
+
     <table class="table table-horizontal table-bordered">
         <thead class="thead-strong">
         <tr>

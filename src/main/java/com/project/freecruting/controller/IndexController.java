@@ -32,10 +32,30 @@ public class IndexController {
     private final PostService postService;
     private final CommentService commentService;
     private final HttpSession httpSession;
+    
+    // 전체 용도
     @GetMapping("/")
     public String index(Model model, @LoginUser SessionUser user,
                         @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
         Page<PostListResponseDto> postPage = postService.findAllPage(page, size);
+
+        model.addAttribute("posts", postPage.getContent());
+        model = supportPaging(model, postPage);
+
+        if(user != null) {
+            model.addAttribute("userName", user.getName());
+        }
+
+        return "index";
+    }
+    
+    // type 변환 용도
+    @GetMapping("/posts/{type}")
+    public String postsType(Model model, @LoginUser SessionUser user, @PathVariable String type,
+                            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
+
+        Page<PostListResponseDto> postPage;
+        postPage = postService.findByType(type, page, size);
 
         model.addAttribute("posts", postPage.getContent());
         model = supportPaging(model, postPage);
