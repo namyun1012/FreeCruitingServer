@@ -1,6 +1,7 @@
 package com.project.freecruting.model;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,5 +24,14 @@ public class PartyMember {
     // 그냥 자유로 설정 가능하게
     private String party_role;
 
+    @Builder
+    public PartyMember(String party_role, Party party, Users user) {
+        this.party_role   = party_role;
+        this.user         = user;
+        this.party        = party;
+    }
 
+    public void update(String party_role) {
+        this.party_role = party_role;
+    }
 }

@@ -4,10 +4,12 @@ import com.project.freecruting.model.Comment;
 import com.project.freecruting.model.Post;
 import com.project.freecruting.model.Users;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
+@NoArgsConstructor
 public class CommentListResponseDto {
     private Long id;
     private String content;

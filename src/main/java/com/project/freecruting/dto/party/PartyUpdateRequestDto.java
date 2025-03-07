@@ -10,10 +10,12 @@ import lombok.NoArgsConstructor;
 public class PartyUpdateRequestDto {
     private String name;
     private String description;
+    private int max_number;
     @Builder
-    public PartyUpdateRequestDto(String name, String description) {
+    public PartyUpdateRequestDto(String name, String description, int max_number) {
         this.name = name;
         this.description = description;
+        this.max_number = max_number;
     }
 
 }

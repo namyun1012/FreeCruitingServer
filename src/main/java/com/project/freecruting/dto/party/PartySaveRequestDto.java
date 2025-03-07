@@ -13,16 +13,18 @@ public class PartySaveRequestDto {
 
     private String name;
     private String description;
+    private int max_number;
 
 
     @Setter
     private Long owner_id;
 
     @Builder
-    public PartySaveRequestDto(String name, String description, Long owner_id) {
+    public PartySaveRequestDto(String name, String description, Long owner_id, int max_number) {
         this.name = name;
         this.description = description;
         this.owner_id = owner_id;
+        this.max_number = max_number;
     }
 
     public Party toEntity() {
@@ -30,6 +32,7 @@ public class PartySaveRequestDto {
                 .name(name)
                 .description(description)
                 .owner_id(owner_id)
+                .max_number(max_number)
                 .build();
     }
 }

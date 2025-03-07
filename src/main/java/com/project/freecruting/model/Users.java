@@ -30,7 +30,7 @@ public class Users extends BaseTimeEntity{
     private Role role;
 
     // Party 등의 추가?
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PartyMember> partyMembers;
 
     @Builder
