@@ -35,6 +35,8 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Comment> comments;
 
+    private int views;
+
     public enum PostType {
         PROJECT, STUDY, REVIEW, ANNOUNCEMENT;
 
@@ -63,5 +65,9 @@ public class Post extends BaseTimeEntity {
         this.content    = content;
         this.imageURL   = imageURL;
         this.type       = type;
+    }
+
+    public void increaseViews() {
+        this.views++;
     }
 }

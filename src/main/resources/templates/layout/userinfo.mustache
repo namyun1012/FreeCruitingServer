@@ -1,0 +1,12 @@
+<div class="row">
+    <div class="col-md-6">
+        {{#userName}}
+            Logged in as: <span id="user">{{userName}}</span>
+            <a href="/logout" class="btn btn-info active" role="button">Logout</a>
+            <a href="/user/update" class="btn btn-info active" role="button">User</a>
+        {{/userName}}
+        {{^userName}}
+            <a href="/oauth2/authorization/google" class="btn btn-success active" role="button">Google Login</a>
+        {{/userName}}
+    </div>
+</div>

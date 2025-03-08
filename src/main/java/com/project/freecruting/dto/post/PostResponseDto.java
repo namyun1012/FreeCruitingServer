@@ -18,6 +18,7 @@ public class PostResponseDto {
     private String imageURL;
     private String type;
     private List<Comment> comments;
+    private int views;
 
     public PostResponseDto(Post entity) {
         this.id         = entity.getId();
@@ -27,6 +28,7 @@ public class PostResponseDto {
         this.imageURL   = entity.getImageURL();
         this.type       = entity.getType().toString();
         this.comments   = entity.getComments();
+        this.views      = entity.getViews();
     }
 
 }

@@ -1,9 +1,11 @@
 package com.project.freecruting.service;
 
 import com.project.freecruting.dto.comment.CommentUpdateRequestDto;
+import com.project.freecruting.dto.party.PartyListResponseDto;
 import com.project.freecruting.dto.party.PartyMemberSaveRequestDto;
 import com.project.freecruting.dto.party.PartySaveRequestDto;
 import com.project.freecruting.dto.party.PartyUpdateRequestDto;
+import com.project.freecruting.dto.post.PostListResponseDto;
 import com.project.freecruting.dto.post.PostSaveRequestDto;
 import com.project.freecruting.model.Comment;
 import com.project.freecruting.model.Party;
@@ -11,6 +13,10 @@ import com.project.freecruting.model.Post;
 import com.project.freecruting.repository.PartyMemberRepository;
 import com.project.freecruting.repository.PartyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,5 +57,13 @@ public class PartyService {
 
         partyRepository.delete(party);
         return id;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<PartyListResponseDto> findAllPage(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        return partyRepository.findAll(pageable)
+                .map(PartyListResponseDto::new);
     }
 }

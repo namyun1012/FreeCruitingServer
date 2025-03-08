@@ -14,10 +14,12 @@ public class PartyListResponseDto {
     private String name;
     private String description;
     private int max_number;
+    private int cur_number;
     public PartyListResponseDto(Party entity) {
         this.id = entity.getId();
         this.name = entity.getName();
         this.description = entity.getDescription();
         this.max_number = entity.getMax_number();
+        this.cur_number = entity.getPartyMembers().size();
     }
 }

@@ -3,11 +3,13 @@ package com.project.freecruting.controller;
 import com.project.freecruting.config.auth.LoginUser;
 import com.project.freecruting.config.auth.dto.SessionUser;
 import com.project.freecruting.dto.comment.CommentListResponseDto;
+import com.project.freecruting.dto.party.PartyListResponseDto;
 import com.project.freecruting.dto.post.PostListResponseDto;
 import com.project.freecruting.dto.post.PostResponseDto;
 import com.project.freecruting.model.Post;
 import com.project.freecruting.model.SearchType;
 import com.project.freecruting.service.CommentService;
+import com.project.freecruting.service.PartyService;
 import com.project.freecruting.service.PostService;
 import com.project.freecruting.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -31,8 +33,7 @@ import java.util.stream.IntStream;
 public class IndexController {
     private final PostService postService;
     private final CommentService commentService;
-    private final HttpSession httpSession;
-    
+    private final PartyService partyService;
     // 전체 용도
     @GetMapping("/")
     public String index(Model model, @LoginUser SessionUser user,
@@ -137,6 +138,21 @@ public class IndexController {
         model.addAttribute("userPicture", user.getPicture());
 
         return "user-update";
+    }
+
+    @GetMapping("/party")
+    public String partys(Model model, @LoginUser SessionUser user,
+                         @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
+        Page<PartyListResponseDto> partyPage = partyService.findAllPage(page, size);
+
+        model.addAttribute("posts", partyPage.getContent());
+        model = supportPaging(model, partyPage);
+
+        if(user != null) {
+            model.addAttribute("userName", user.getName());
+        }
+
+        return "party-list";
     }
 
     // Paging 사용시 Page Support 하기 위함

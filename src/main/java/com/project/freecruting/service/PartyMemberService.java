@@ -22,8 +22,7 @@ public class PartyMemberService {
     private final PartyRepository partyRepository;
 
     @Transactional
-    public Long save(PartyMemberSaveRequestDto requestDto) {
-        Long user_id = requestDto.getUser_id();
+    public Long save(PartyMemberSaveRequestDto requestDto, Long user_id) {
         Long party_id = requestDto.getParty_id();
 
         Users user = userRepository.findById(user_id).orElseThrow(() -> new RuntimeException("해당 USER 없음"));

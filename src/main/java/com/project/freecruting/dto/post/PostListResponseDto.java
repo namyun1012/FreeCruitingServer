@@ -14,6 +14,8 @@ public class PostListResponseDto {
     private String type;
     private String content;
     private LocalDateTime modifiedDate;
+    private int views;
+    private int comments;
 
     public PostListResponseDto(Post entity) {
         this.id = entity.getId();
@@ -23,6 +25,8 @@ public class PostListResponseDto {
         this.type = entity.getType().toString();
         this.modifiedDate = entity.getModifiedDate();
         this.content = entity.getContent();
+        this.views = entity.getViews();
+        this.comments = entity.getComments().size();
     }
 
 }

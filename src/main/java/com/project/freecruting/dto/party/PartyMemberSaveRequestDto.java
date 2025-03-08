@@ -12,15 +12,12 @@ public class PartyMemberSaveRequestDto {
 
     private String party_role;
 
-    private Long user_id;
-
     private Long party_id;
 
     @Builder
-    public PartyMemberSaveRequestDto(String party_role, Long party_id, Long user_id) {
+    public PartyMemberSaveRequestDto(String party_role, Long party_id) {
         this.party_role = party_role;
         this.party_id = party_id;
-        this.user_id = user_id;
     }
 
     public PartyMember toEntity(Party party, Users user) {

@@ -8,40 +8,33 @@
 
 <h1>FreeCruiting</h1>
 <div class = "col-md-12">
-
     {{>layout/userinfo}}
     <br>
-    {{>layout/search}}
-    <br>
-    <a href="/post/save" role="button" class="btn btn-primary">New Post</a>
 
+    <a href="/party/save" role="button" class="btn btn-primary">New Party</a>
     {{>layout/navigate}}
-
     <table class="table table-horizontal table-bordered">
         <thead class="thead-strong">
         <tr>
             <th>id</th>
-            <th>title</th>
-            <th>author</th>
-            <th>type</th>
-            <th>views</th>
-            <th>comments</th>
+            <th>name</th>
+            <th>description</th>
+            <th>cur_number</th>
+            <th>max_number</th>
         </tr>
         </thead>
         <tbody id="tbody">
-        {{#posts}}
+        {{#partys}}
             <tr>
                 <td>{{id}}</td>
-                <td><a href="/post/read/{{id}}">{{title}}</a></td>
-                <td>{{author}}</td>
-                <td>{{type}}</td>
-                <td>{{views}}</td>
-                <td>{{comments}}</td>
+                <td><a href="/party/read/{{id}}">{{name}}</a></td>
+                <td>{{description}}</td>
+                <td>{{cur_number}}</td>
+                <td>{{max_number}}</td>
             </tr>
-        {{/posts}}
+        {{/partys}}
         </tbody>
     </table>
-
     <div class="d-flex justify-content-center">
         {{>layout/pages}}
     </div>

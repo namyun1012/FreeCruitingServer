@@ -1,4 +1,3 @@
-// 추후 React 에서 써먹기
 
 var main = {
     init : function () {
@@ -181,6 +180,9 @@ function deleteComment(comment_id) {
         alert("Error deleting comment: " + JSON.stringify(error));
     });
 }
+
+// party 함수
+
 
 
 main.init()

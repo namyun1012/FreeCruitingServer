@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>FreeCruiting</title>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+</head>
+<body>
+
+<h1>Update Party</h1>
+
+<div class="col-md-12">
+    <div class="col-md-4">
+        <form>
+            <div class="form-group">
+                <label for="title">Name</label>
+                <input type="text" class="form-control" id="name" value="{{party.name}}" required>
+            </div>
+            <div class="form-group">
+                <label for="content"> Description </label>
+                <textarea class="form-control" id="description">{{party.description}}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="type"> Max Number </label>
+                <input type="number" id="max_number" name="max_number" value={{party.max_number}} min="5" max="15" step="1">
+            </div>
+        </form>
+        <a href="/party" role="button" class="btn btn-secondary">Cancel</a>
+        <button type="button" class="btn btn-primary" onclick="saveParty()">Register</button>
+        <button type="button" class="btn btn-primary" onclick="updateParty()">Update Complete</button>
+        <button type="button" class="btn btn-danger" onclick="deleteParty()">Delete</button>
+    </div>
+</div>
+
+{{>layout/footer}}

@@ -57,8 +57,10 @@ public class PostService {
         return id;
     }
 
+    @Transactional
     public PostResponseDto findById(Long id) {
         Post entity = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글 없음. id=" + id));
+        postRepository.increaseViews(id);
         return new PostResponseDto(entity);
     }
 
