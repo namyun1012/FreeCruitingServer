@@ -182,7 +182,63 @@ function deleteComment(comment_id) {
 }
 
 // party 함수
+function saveParty() {
+        var data = {
+            name: $('#party-name-save').val(),
+            description: $('#party-description-save').val(),
+            max_number: $('#party-max_number-save').val()
+        };
 
+        $.ajax({
+            type: 'POST',
+            url: '/api/v1/party',
+            dataType: 'json',
+            contentType:'application/json; charset=utf-8',
+            data: JSON.stringify(data)
+        }).done(function() {
+            alert('Register New Party.');
+            window.location.href = '/party';
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+}
 
+function updateParty() {
+        var party_id = $('#party-id-update').val();
 
+        var data = {
+            name: $('#party-name-update').val(),
+            description: $('#party-description-update').val(),
+            max_number: $('#party-max_number-update').val()
+        };
+
+        $.ajax({
+            type: 'PUT',
+            url: '/api/v1/party/' + party_id,
+            dataType: 'json',
+            contentType:'application/json; charset=utf-8',
+            data: JSON.stringify(data)
+        }).done(function() {
+            alert('Update Party.');
+            window.location.href = '/party';
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+}
+
+function deleteParty() {
+        var party_id = $('#party-id-update').val();
+
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/v1/party/' + party_id,
+            dataType: 'json',
+            contentType:'application/json; charset=utf-8'
+        }).done(function() {
+            alert('Delete Party.');
+            window.location.href = '/party';
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+}
 main.init()

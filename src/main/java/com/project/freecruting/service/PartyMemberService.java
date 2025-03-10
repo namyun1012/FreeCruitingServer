@@ -1,9 +1,7 @@
 package com.project.freecruting.service;
 
-import com.project.freecruting.dto.party.PartyMemberSaveRequestDto;
-import com.project.freecruting.dto.party.PartyMemberUpdateRequestDto;
-import com.project.freecruting.dto.party.PartySaveRequestDto;
-import com.project.freecruting.dto.party.PartyUpdateRequestDto;
+import com.project.freecruting.dto.comment.CommentListResponseDto;
+import com.project.freecruting.dto.party.*;
 import com.project.freecruting.model.Party;
 import com.project.freecruting.model.PartyMember;
 import com.project.freecruting.model.Users;
@@ -13,6 +11,9 @@ import com.project.freecruting.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -28,9 +29,13 @@ public class PartyMemberService {
         Users user = userRepository.findById(user_id).orElseThrow(() -> new RuntimeException("해당 USER 없음"));
         Party party = partyRepository.findById(party_id).orElseThrow(() -> new RuntimeException("해당 USER 없음"));;
 
+        // 해당 Party 에 이미 당사자가 존재하는 경우 안 됨
+        if(partyMemberRepository.findByPartyIdAndUserId(party_id, user_id).isPresent()) {
+            return 0L;
+        }
+
         PartyMember result = partyMemberRepository.save(requestDto.toEntity(party, user));
 
-        // party Member 자기 자신 추가는 Controller 에서 각각 호출하는 것으로
         return result.getId();
     }
 
@@ -64,6 +69,20 @@ public class PartyMemberService {
         partyMemberRepository.delete(partyMember);
         return id;
 
+    }
+
+    @Transactional(readOnly = true)
+    public List<PartyMemberListResponseDto> findByPartyId(Long party_id) {
+        return partyMemberRepository.findByPartyId(party_id).stream()
+                .map(PartyMemberListResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<PartyMemberListResponseDto> findByUserId(Long user_id) {
+        return partyMemberRepository.findByUserId(user_id).stream()
+                .map(PartyMemberListResponseDto::new)
+                .collect(Collectors.toList());
     }
 
 }

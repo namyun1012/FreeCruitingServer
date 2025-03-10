@@ -6,26 +6,28 @@
 </head>
 <body>
 
-<h1>New Party</h1>
+<h1>Read Party</h1>
 
 <div class="col-md-12">
     <div class="col-md-4">
         <form>
+            <input type="hidden" class="form-control" id="party_id" value="{{party.id}}" readonly>
+
             <div class="form-group">
                 <label for="title">Name</label>
-                <input type="text" class="form-control" id="party-name-save" placeholder="Enter name" required>
+                <input type="text" class="form-control" id="party_name" value="{{party.name}}" readonly>
             </div>
             <div class="form-group">
                 <label for="content"> Description </label>
-                <textarea class="form-control" id="party-description-save" placeholder="Enter Description"></textarea>
+                <textarea class="form-control" id="party_description" readonly>{{party.description}}</textarea>
             </div>
             <div class="form-group">
                 <label for="type"> Max Number </label>
-                <input type="number" id="party-max_number-save" name="max_number" value="5" min="5" max="15" step="1">
+                <input type="number" id="party_max_number" name="max_number" value={{party.max_number}} min="5" max="15" step="1" readonly>
             </div>
         </form>
         <a href="/party" role="button" class="btn btn-secondary">Cancel</a>
-        <button type="button" class="btn btn-primary" onclick="saveParty()">Register</button>
+        <a href="/party/update/{{party.id}}" role="button" class="btn btn-secondary">Update</a>
     </div>
 </div>
 

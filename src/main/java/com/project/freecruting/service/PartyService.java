@@ -1,11 +1,9 @@
 package com.project.freecruting.service;
 
 import com.project.freecruting.dto.comment.CommentUpdateRequestDto;
-import com.project.freecruting.dto.party.PartyListResponseDto;
-import com.project.freecruting.dto.party.PartyMemberSaveRequestDto;
-import com.project.freecruting.dto.party.PartySaveRequestDto;
-import com.project.freecruting.dto.party.PartyUpdateRequestDto;
+import com.project.freecruting.dto.party.*;
 import com.project.freecruting.dto.post.PostListResponseDto;
+import com.project.freecruting.dto.post.PostResponseDto;
 import com.project.freecruting.dto.post.PostSaveRequestDto;
 import com.project.freecruting.model.Comment;
 import com.project.freecruting.model.Party;
@@ -66,4 +64,11 @@ public class PartyService {
         return partyRepository.findAll(pageable)
                 .map(PartyListResponseDto::new);
     }
+
+    @Transactional
+    public PartyResponseDto findById(Long id) {
+        Party entity = partyRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 PARTY 없음. id=" + id));
+        return new PartyResponseDto(entity);
+    }
+
 }

@@ -4,14 +4,14 @@ import com.project.freecruting.config.auth.LoginUser;
 import com.project.freecruting.config.auth.dto.SessionUser;
 import com.project.freecruting.dto.comment.CommentListResponseDto;
 import com.project.freecruting.dto.party.PartyListResponseDto;
+import com.project.freecruting.dto.party.PartyMemberListResponseDto;
+import com.project.freecruting.dto.party.PartyResponseDto;
 import com.project.freecruting.dto.post.PostListResponseDto;
 import com.project.freecruting.dto.post.PostResponseDto;
+import com.project.freecruting.model.Party;
 import com.project.freecruting.model.Post;
 import com.project.freecruting.model.SearchType;
-import com.project.freecruting.service.CommentService;
-import com.project.freecruting.service.PartyService;
-import com.project.freecruting.service.PostService;
-import com.project.freecruting.service.UserService;
+import com.project.freecruting.service.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,6 +34,9 @@ public class IndexController {
     private final PostService postService;
     private final CommentService commentService;
     private final PartyService partyService;
+    private final PartyMemberService partyMemberService;
+
+
     // 전체 용도
     @GetMapping("/")
     public String index(Model model, @LoginUser SessionUser user,
@@ -126,6 +129,24 @@ public class IndexController {
         return "post-search";
     }
 
+    @GetMapping("/user")
+    public String userRead(Model model, @LoginUser SessionUser user)
+    {
+        if(user == null) {
+            return "/";
+        }
+
+        model.addAttribute("userName", user.getName());
+        model.addAttribute("userEmail", user.getEmail());
+        model.addAttribute("userPicture", user.getPicture());
+
+        List<PartyMemberListResponseDto> partyMembers = partyMemberService.findByUserId(user.getId());
+        model.addAttribute("partyMembers", partyMembers);
+
+        return "user-update";
+    }
+
+
     @GetMapping("/user/update")
     public String userUpdate(Model model, @LoginUser SessionUser user)
     {
@@ -145,7 +166,7 @@ public class IndexController {
                          @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
         Page<PartyListResponseDto> partyPage = partyService.findAllPage(page, size);
 
-        model.addAttribute("posts", partyPage.getContent());
+        model.addAttribute("partys", partyPage.getContent());
         model = supportPaging(model, partyPage);
 
         if(user != null) {
@@ -153,6 +174,39 @@ public class IndexController {
         }
 
         return "party-list";
+    }
+
+    @GetMapping("/party/save")
+    public String partySave(Model model, @LoginUser SessionUser user) {
+
+        if(user != null) {
+            model.addAttribute("userName", user.getName());
+        }
+
+        return "party-save";
+    }
+
+    @GetMapping("/party/update/{id}")
+    public String partyUpdate(@PathVariable Long id, Model model)
+    {
+        PartyResponseDto party = partyService.findById(id);
+        model.addAttribute("party", party);
+
+        // Party Member 들을 보여줌.
+        List<PartyMemberListResponseDto> partyMembers = partyMemberService.findByPartyId(party.getId());
+        model.addAttribute("partyMembers", partyMembers);
+        return "party-update";
+    }
+
+    @GetMapping("/party/read/{id}")
+    public String partyRead(@PathVariable Long id, Model model, @LoginUser SessionUser user) {
+        PartyResponseDto party = partyService.findById(id);
+        model.addAttribute("party", party);
+
+        List<PartyMemberListResponseDto> partyMembers = partyMemberService.findByPartyId(party.getId());
+        model.addAttribute("partyMembers", partyMembers);
+        
+        return "party-read";
     }
 
     // Paging 사용시 Page Support 하기 위함
