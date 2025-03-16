@@ -11,7 +11,6 @@
 <div class="col-md-12">
     <div class="col-md-4">
         <form>
-
             <input type="hidden" class="form-control" id="party-id-update" value="{{party.id}}" readonly>
 
             <div class="form-group">
@@ -30,6 +29,24 @@
         <a href="/party" role="button" class="btn btn-secondary">Cancel</a>
         <button type="button" class="btn btn-primary" onclick="updateParty()">Update Complete</button>
         <button type="button" class="btn btn-danger" onclick="deleteParty()">Delete</button>
+    </div>
+
+    <div class="mt-4">
+        <h5>Party Members</h5>
+        <ul class="list-group mt-3">
+            {{#partyMembers}}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{user_name}}
+                    {{#party_role}}
+                        {{party_role}}
+                    {{/party_role}}
+                </li>
+                <button type="button" class="btn btn-danger" onclick="deletePartyMember({{id}}, {{party.id}})">Out</button>
+            {{/partyMembers}}
+            {{^partyMembers}}
+                <li class="list-group-item text-muted">No party member</li>
+            {{/partyMembers}}
+        </ul>
     </div>
 </div>
 

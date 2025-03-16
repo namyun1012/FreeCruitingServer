@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>FreeCruiting</title>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+</head>
+<body>
+
+<h1>User</h1>
+
+<div class="col-md-12">
+    <div class="col-md-4">
+        <form>
+            <div class="form-group">
+                <label for="title">Name</label>
+                <input type="text" class="form-control" id="name" value="{{userName}}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="title">Email</label>
+                <input type="text" class="form-control" id="email" value="{{userEmail}}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="author">Picture</label>
+                <img src="{{userPicture}}" width="500" height="300" id="picture">
+            </div>
+        </form>
+        <a href="/" role="button" class="btn btn-secondary">Cancel</a>
+        <a href="/user/update" class="btn btn-primary" role="button">Update</a>
+    </div>
+
+    <!-- User Party 부분 -->
+    <div class="mt-4">
+        <h5>Participated Parties</h5>
+        <ul class="list-group mt-3">
+            {{#partyMembers}}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="/party/read/{{party_id}}">{{party_name}}</a>
+                </li>
+            {{/partyMembers}}
+            {{^partyMembers}}
+                <li class="list-group-item text-muted">No party member</li>
+            {{/partyMembers}}
+        </ul>
+    </div>
+</div>
+
+
+
+
+{{>layout/footer}}

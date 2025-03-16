@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>FreeCruiting</title>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+</head>
+
+<body class="bg-light">
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h1 class="text-center mb-4">로그인</h1>
+                <form action="/login" method="post">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">아이디</label>
+                        <input type="text" id="username" name="username" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">비밀번호</label>
+                        <input type="password" id="password" name="password" class="form-control" required>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">로그인</button>
+                    </div>
+                </form>
+                <div class="text-center mt-3">
+                    <a href="/oauth2/authorization/google" class="btn btn-danger">Google 계정으로 로그인</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+{{>layout/footer}}

@@ -27,10 +27,15 @@ public class PartyMemberService {
         Long party_id = requestDto.getParty_id();
 
         Users user = userRepository.findById(user_id).orElseThrow(() -> new RuntimeException("해당 USER 없음"));
-        Party party = partyRepository.findById(party_id).orElseThrow(() -> new RuntimeException("해당 USER 없음"));;
+        Party party = partyRepository.findById(party_id).orElseThrow(() -> new RuntimeException("해당 PARTY 없음"));;
 
         // 해당 Party 에 이미 당사자가 존재하는 경우 안 됨
         if(partyMemberRepository.findByPartyIdAndUserId(party_id, user_id).isPresent()) {
+            return 0L;
+        }
+
+        // 해당 Party 의 Max Number Logic 을 확인하는 함수를 넣을 것
+        if(party.getPartyMembers() != null && party.getPartyMembers().size() == party.getMax_number()) {
             return 0L;
         }
 

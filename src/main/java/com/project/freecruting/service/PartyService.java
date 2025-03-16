@@ -7,6 +7,7 @@ import com.project.freecruting.dto.post.PostResponseDto;
 import com.project.freecruting.dto.post.PostSaveRequestDto;
 import com.project.freecruting.model.Comment;
 import com.project.freecruting.model.Party;
+import com.project.freecruting.model.PartyMember;
 import com.project.freecruting.model.Post;
 import com.project.freecruting.repository.PartyMemberRepository;
 import com.project.freecruting.repository.PartyRepository;
@@ -18,10 +19,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Service
 public class PartyService {
     private final PartyRepository partyRepository;
+    private final PartyMemberRepository partyMemberRepository;
+
     // Party 생성 시 자기 자신을 Party Member 로 추가
     @Transactional
     public Long save(PartySaveRequestDto requestDto) {

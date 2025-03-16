@@ -18,6 +18,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // 최신 방식으로 CSRF 비활성화
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/h2-console/**", "/profile").permitAll()
+                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/api/v1/post/**", "/post/read/**").permitAll()
                         .requestMatchers("/api/v1/**").hasRole("USER")
                         .anyRequest().authenticated()
                 )
@@ -25,10 +27,11 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/")
                 )
                 .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login")
+                        .permitAll()
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customerOAuth2UserService)
                         )
-
                 )
                 .headers(headers -> headers
                         .httpStrictTransportSecurity(hsts -> hsts.disable()) // HSTS 비활성화

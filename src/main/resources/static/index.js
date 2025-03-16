@@ -241,4 +241,57 @@ function deleteParty() {
             alert(JSON.stringify(error));
         });
 }
+
+function savePartyMember(party_id) {
+        var data = {
+            party_id: party_id
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '/api/v1/partymember',
+            dataType: 'json',
+            contentType:'application/json; charset=utf-8',
+            data: JSON.stringify(data)
+        }).done(function() {
+            alert('Join Party.');
+            window.location.href = '/party/read/' + party_id;
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+}
+
+function updatePartyMember() {
+        var data = {
+        };
+
+        $.ajax({
+            type: 'PUT',
+            url: '/api/v1/partymember',
+            dataType: 'json',
+            contentType:'application/json; charset=utf-8',
+            data: JSON.stringify(data)
+        }).done(function() {
+            alert('Update Party Role.');
+            window.location.href = '/party/read/' + party_id;
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+}
+
+function deletePartyMember(partymember_id, party_id) {
+
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/v1/partymember/' + partymember_id,
+            dataType: 'json',
+            contentType:'application/json; charset=utf-8'
+        }).done(function() {
+            alert('Out Party.');
+            window.location.href = '/party/update/' + party_id;
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+}
+
 main.init()

@@ -45,9 +45,8 @@ public class CommentService {
     }
 
     @Transactional
-    public Long save(CommentSaveRequestDto requestDto) {
+    public Long save(CommentSaveRequestDto requestDto, Long user_id) {
         Long post_id = requestDto.getPost_id();
-        Long user_id = requestDto.getUser_id();
         Post post = postRepository.findById(post_id).orElseThrow(() -> new RuntimeException("해당 POST 없음"));
         Users user = userRepository.findById(user_id).orElseThrow(() -> new RuntimeException("해당 USER 없음"));
 

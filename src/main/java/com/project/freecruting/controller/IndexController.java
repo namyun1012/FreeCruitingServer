@@ -143,9 +143,8 @@ public class IndexController {
         List<PartyMemberListResponseDto> partyMembers = partyMemberService.findByUserId(user.getId());
         model.addAttribute("partyMembers", partyMembers);
 
-        return "user-update";
+        return "user-read";
     }
-
 
     @GetMapping("/user/update")
     public String userUpdate(Model model, @LoginUser SessionUser user)

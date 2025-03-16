@@ -29,9 +29,7 @@ public class CommentController {
     @PostMapping("/comment")
     public ResponseEntity<?> save(@RequestBody CommentSaveRequestDto requestDto, @LoginUser SessionUser user) {
         // requestDto 에서 User ID 는 Controller 에서 Setting 을 해주기.
-        requestDto.setUser_id(user.getId());
-        requestDto.setAuthor(user.getName());
-        Long result = commentService.save(requestDto);
+        Long result = commentService.save(requestDto, user.getId());
 
         if(result == 0L) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "댓글 작성 실패"));

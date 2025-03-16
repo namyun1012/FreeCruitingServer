@@ -7,7 +7,6 @@
 <body>
 
 <h1>Read Party</h1>
-
 <div class="col-md-12">
     <div class="col-md-4">
         <form>
@@ -29,6 +28,26 @@
         <a href="/party" role="button" class="btn btn-secondary">Cancel</a>
         <a href="/party/update/{{party.id}}" role="button" class="btn btn-secondary">Update</a>
     </div>
+
+    <!-- Party Members 부분 -->
+    <div class="mt-4">
+        <h5>Party Members</h5>
+        <ul class="list-group mt-3">
+            {{#partyMembers}}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{user_name}}
+                    {{#party_role}}
+                        {{party_role}}
+                    {{/party_role}}
+                </li>
+            {{/partyMembers}}
+            {{^partyMembers}}
+                <li class="list-group-item text-muted">No party member</li>
+            {{/partyMembers}}
+        </ul>
+        <button type="button" class="btn btn-primary" onclick="savePartyMember({{party.id}})">Join</button>
+    </div>
 </div>
+
 
 {{>layout/footer}}

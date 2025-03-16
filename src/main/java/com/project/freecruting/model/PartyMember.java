@@ -22,6 +22,7 @@ public class PartyMember {
     private Party party;
 
     // 그냥 자유로 설정 가능하게
+    // 기본은 빈 값, Update 할 때 사용 가능하게 하기
     private String party_role;
 
     @Builder
