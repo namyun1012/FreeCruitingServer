@@ -130,8 +130,9 @@ public class IndexController {
     }
 
     @GetMapping("/user")
-    public String userRead(Model model, @LoginUser SessionUser user)
-    {
+    public String userRead(Model model, @LoginUser SessionUser user,
+                           @RequestParam(defaultValue = "0") int page,
+                           @RequestParam(defaultValue = "5") int size) {
         if(user == null) {
             return "/";
         }
@@ -140,8 +141,9 @@ public class IndexController {
         model.addAttribute("userEmail", user.getEmail());
         model.addAttribute("userPicture", user.getPicture());
 
-        List<PartyMemberListResponseDto> partyMembers = partyMemberService.findByUserId(user.getId());
-        model.addAttribute("partyMembers", partyMembers);
+        Page<PartyMemberListResponseDto> partyMemberPage = partyMemberService.findByUserId(user.getId(),page, size);
+        model.addAttribute("partyMembers", partyMemberPage);
+        model = supportPaging(model, partyMemberPage);
 
         return "user-read";
     }

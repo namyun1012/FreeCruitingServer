@@ -244,7 +244,8 @@ function deleteParty() {
 
 function savePartyMember(party_id) {
         var data = {
-            party_id: party_id
+            party_id: party_id,
+            party_role: "MEMBER"
         };
 
         $.ajax({

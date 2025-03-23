@@ -9,6 +9,9 @@ import com.project.freecruting.repository.PartyMemberRepository;
 import com.project.freecruting.repository.PartyRepository;
 import com.project.freecruting.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -84,10 +87,11 @@ public class PartyMemberService {
     }
 
     @Transactional(readOnly = true)
-    public List<PartyMemberListResponseDto> findByUserId(Long user_id) {
-        return partyMemberRepository.findByUserId(user_id).stream()
-                .map(PartyMemberListResponseDto::new)
-                .collect(Collectors.toList());
+    public Page<PartyMemberListResponseDto> findByUserId(Long user_id, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+
+        return partyMemberRepository.findByUserId(user_id, pageable).map(PartyMemberListResponseDto::new);
     }
 
 }

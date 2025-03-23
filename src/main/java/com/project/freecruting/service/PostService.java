@@ -26,8 +26,7 @@ public class PostService {
 
     @Transactional
     public Long save(PostSaveRequestDto requestDto, Long author_id) {
-        requestDto.setAuthor_id(author_id);
-        return postRepository.save(requestDto.toEntity()).getId();
+        return postRepository.save(requestDto.toEntity(author_id)).getId();
     }
 
     @Transactional

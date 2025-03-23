@@ -32,6 +32,9 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customerOAuth2UserService)
                         )
+                        .successHandler(((request, response, authentication) -> {
+                            response.sendRedirect("/");
+                        }))
                 )
                 .headers(headers -> headers
                         .httpStrictTransportSecurity(hsts -> hsts.disable()) // HSTS 비활성화

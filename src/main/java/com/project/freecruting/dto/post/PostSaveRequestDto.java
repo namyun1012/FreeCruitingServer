@@ -15,20 +15,17 @@ public class PostSaveRequestDto {
     private String imageURL;
     private String type;
 
-    @Setter
-    private Long author_id;
 
     @Builder
-    public PostSaveRequestDto(String title, String content, String author, String  imageURL, String type, Long author_id) {
+    public PostSaveRequestDto(String title, String content, String author, String  imageURL, String type) {
         this.type = type;
         this.title = title;
         this.content = content;
         this.author = author;
         this.imageURL =imageURL;
-        this.author_id = author_id;
     }
 
-    public Post toEntity() {
+    public Post toEntity(Long author_id) {
         return Post.builder()
                 .title(title)
                 .content(content)
