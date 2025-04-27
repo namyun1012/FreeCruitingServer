@@ -10,6 +10,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+/*
+    IndexController 에 과하게 몰려서 Login 관련 front 는 이쪽에다 작성
+
+ */
+
+
 @RequiredArgsConstructor
 @Controller
 public class LoginController {

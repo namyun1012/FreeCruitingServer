@@ -4,13 +4,18 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
 @NoArgsConstructor
 @Entity
-public class Users extends BaseTimeEntity{
+public class Users extends BaseTimeEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +32,8 @@ public class Users extends BaseTimeEntity{
     @Column
     private String picture;
 
+    private String provider; // Google or Local
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
@@ -36,12 +43,13 @@ public class Users extends BaseTimeEntity{
     private List<PartyMember> partyMembers;
 
     @Builder
-    public Users(String name, String email, String picture, Role role, String password) {
+    public Users(String name, String email, String picture, Role role, String password, String provider) {
         this.name = name;
         this.email = email;
         this.picture = picture;
         this.role = role;
         this.password = password;
+        this.provider = provider;
     }
 
     public Users update(String name, String picture) {
@@ -51,9 +59,47 @@ public class Users extends BaseTimeEntity{
         return this;
     }
 
-
-
     public String getRoleKey() {
         return this.role.getKey();
     }
+        
+    
+    // 아래는 자체 회원가입에 필요한 함수들
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("user"));
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+
+    
 }
