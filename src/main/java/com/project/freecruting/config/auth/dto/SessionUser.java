@@ -1,6 +1,6 @@
 package com.project.freecruting.config.auth.dto;
 
-import com.project.freecruting.model.Users;
+import com.project.freecruting.model.User;
 import lombok.Getter;
 
 import java.io.Serializable;
@@ -11,7 +11,7 @@ public class SessionUser implements Serializable {
     private String email;
     private String picture;
 
-    public SessionUser(Users user) {
+    public SessionUser(User user) {
         this.id   = user.getId();
         this.name = user.getName();
         this.email = user.getEmail();

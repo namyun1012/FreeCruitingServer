@@ -9,14 +9,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 @Getter
 @NoArgsConstructor
 @Entity
-public class Users extends BaseTimeEntity implements UserDetails {
-
+@Table(name = "\"USER\"")
+public class User extends BaseTimeEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,7 +23,7 @@ public class Users extends BaseTimeEntity implements UserDetails {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     private String password;
@@ -43,7 +42,7 @@ public class Users extends BaseTimeEntity implements UserDetails {
     private List<PartyMember> partyMembers;
 
     @Builder
-    public Users(String name, String email, String picture, Role role, String password, String provider) {
+    public User(String name, String email, String picture, Role role, String password, String provider) {
         this.name = name;
         this.email = email;
         this.picture = picture;
@@ -52,7 +51,7 @@ public class Users extends BaseTimeEntity implements UserDetails {
         this.provider = provider;
     }
 
-    public Users update(String name, String picture) {
+    public User update(String name, String picture) {
         this.name = name;
         this.picture = picture;
 

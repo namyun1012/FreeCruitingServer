@@ -1,7 +1,6 @@
 package com.project.freecruting.dto.user;
 
-import com.project.freecruting.model.Post;
-import com.project.freecruting.model.Users;
+import com.project.freecruting.model.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,8 +19,8 @@ public class UserSaveRequestDto {
         this.userName = userName;
     }
 
-    public Users toEntity() {
-        return Users.builder()
+    public User toEntity() {
+        return User.builder()
                 .email(email)
                 .password(password)
                 .name(userName)

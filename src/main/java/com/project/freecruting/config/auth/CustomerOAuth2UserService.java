@@ -2,7 +2,7 @@ package com.project.freecruting.config.auth;
 
 import com.project.freecruting.config.auth.dto.OAuthAttributes;
 import com.project.freecruting.config.auth.dto.SessionUser;
-import com.project.freecruting.model.Users;
+import com.project.freecruting.model.User;
 import com.project.freecruting.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class CustomerOAuth2UserService implements OAuth2UserService<OAuth2UserRe
 
             OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
-            Users user = saveOrUpdate(attributes);
+            User user = saveOrUpdate(attributes);
             httpSession.setAttribute("user", new SessionUser(user));
             // updateSecurityContext(user);
 
@@ -51,7 +51,7 @@ public class CustomerOAuth2UserService implements OAuth2UserService<OAuth2UserRe
     }
 
     // DB 있을 시 DB 내용을 먼저 참고하도록 변경함
-    private Users saveOrUpdate(OAuthAttributes attributes) {
+    private User saveOrUpdate(OAuthAttributes attributes) {
         return userRepository.findByEmail(attributes.getEmail())
                 .map(existingUser -> {
 

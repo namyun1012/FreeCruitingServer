@@ -2,11 +2,10 @@ package com.project.freecruting.dto.comment;
 
 import com.project.freecruting.model.Comment;
 import com.project.freecruting.model.Post;
-import com.project.freecruting.model.Users;
+import com.project.freecruting.model.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
@@ -21,7 +20,7 @@ public class CommentSaveRequestDto {
         this.post_id = post_id;
     }
 
-    public Comment toEntity(Post post, Users user) {
+    public Comment toEntity(Post post, User user) {
         return Comment.builder()
                 .content(content)
                 .post(post)

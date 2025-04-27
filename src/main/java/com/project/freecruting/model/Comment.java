@@ -26,10 +26,10 @@ public class Comment extends BaseTimeEntity{
 
     @ManyToOne
     @JoinColumn(name = "users_id", nullable = false)
-    private Users user;
+    private User user;
 
     @Builder
-    public Comment(String content, Post post, Users user, String author) {
+    public Comment(String content, Post post, User user, String author) {
         this.content    = content;
         this.post       = post;
         this.user       = user;

@@ -1,6 +1,6 @@
 package com.project.freecruting.config.auth.dto;
 import com.project.freecruting.model.Role;
-import com.project.freecruting.model.Users;
+import com.project.freecruting.model.User;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -37,8 +37,8 @@ public class OAuthAttributes {
                 .build();
     }
 
-    public Users toEntity() {
-        return Users.builder()
+    public User toEntity() {
+        return User.builder()
                 .name(name)
                 .email(email)
                 .picture(picture)

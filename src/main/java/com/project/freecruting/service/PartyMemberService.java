@@ -1,10 +1,9 @@
 package com.project.freecruting.service;
 
-import com.project.freecruting.dto.comment.CommentListResponseDto;
 import com.project.freecruting.dto.party.*;
 import com.project.freecruting.model.Party;
 import com.project.freecruting.model.PartyMember;
-import com.project.freecruting.model.Users;
+import com.project.freecruting.model.User;
 import com.project.freecruting.repository.PartyMemberRepository;
 import com.project.freecruting.repository.PartyRepository;
 import com.project.freecruting.repository.UserRepository;
@@ -29,7 +28,7 @@ public class PartyMemberService {
     public Long save(PartyMemberSaveRequestDto requestDto, Long user_id) {
         Long party_id = requestDto.getParty_id();
 
-        Users user = userRepository.findById(user_id).orElseThrow(() -> new RuntimeException("해당 USER 없음"));
+        User user = userRepository.findById(user_id).orElseThrow(() -> new RuntimeException("해당 USER 없음"));
         Party party = partyRepository.findById(party_id).orElseThrow(() -> new RuntimeException("해당 PARTY 없음"));;
 
         // 해당 Party 에 이미 당사자가 존재하는 경우 안 됨

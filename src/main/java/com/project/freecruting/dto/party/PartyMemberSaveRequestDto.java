@@ -4,7 +4,6 @@ import com.project.freecruting.model.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
@@ -17,7 +16,7 @@ public class PartyMemberSaveRequestDto {
         this.party_id = party_id;
     }
 
-    public PartyMember toEntity(Party party, Users user) {
+    public PartyMember toEntity(Party party, User user) {
         return PartyMember.builder()
                 .party_role(party_role)
                 .party(party)

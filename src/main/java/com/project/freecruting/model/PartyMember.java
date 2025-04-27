@@ -15,7 +15,7 @@ public class PartyMember {
 
     @ManyToOne
     @JoinColumn(name = "users_id", nullable = false)
-    private Users user;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "party_id", nullable = false)
@@ -26,7 +26,7 @@ public class PartyMember {
     private String party_role;
 
     @Builder
-    public PartyMember(String party_role, Party party, Users user) {
+    public PartyMember(String party_role, Party party, User user) {
         this.party_role   = party_role;
         this.user         = user;
         this.party        = party;

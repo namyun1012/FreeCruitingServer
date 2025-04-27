@@ -1,9 +1,8 @@
 package com.project.freecruting.controller;
 
 import com.project.freecruting.config.auth.dto.SessionUser;
-import com.project.freecruting.dto.post.PostUpdateRequestDto;
 import com.project.freecruting.dto.user.UserUpdateRequestDto;
-import com.project.freecruting.model.Users;
+import com.project.freecruting.model.User;
 import com.project.freecruting.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,7 @@ public class UserController {
     @PutMapping("/user")
     public ResponseEntity<?> update(@RequestBody UserUpdateRequestDto requestDto, @AuthenticationPrincipal OAuth2User oAuth2User) {
         String email = oAuth2User.getAttribute("email");
-        Users user = userService.update(requestDto, email);
+        User user = userService.update(requestDto, email);
 
         if (user != null) {
             // Session Update 적용해 주어야 한다.

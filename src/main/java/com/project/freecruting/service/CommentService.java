@@ -3,12 +3,9 @@ package com.project.freecruting.service;
 import com.project.freecruting.dto.comment.CommentListResponseDto;
 import com.project.freecruting.dto.comment.CommentSaveRequestDto;
 import com.project.freecruting.dto.comment.CommentUpdateRequestDto;
-import com.project.freecruting.dto.post.PostListResponseDto;
-import com.project.freecruting.dto.post.PostSaveRequestDto;
-import com.project.freecruting.dto.post.PostUpdateRequestDto;
 import com.project.freecruting.model.Comment;
 import com.project.freecruting.model.Post;
-import com.project.freecruting.model.Users;
+import com.project.freecruting.model.User;
 import com.project.freecruting.repository.CommentRepository;
 import com.project.freecruting.repository.PostRepository;
 import com.project.freecruting.repository.UserRepository;
@@ -48,7 +45,7 @@ public class CommentService {
     public Long save(CommentSaveRequestDto requestDto, Long user_id) {
         Long post_id = requestDto.getPost_id();
         Post post = postRepository.findById(post_id).orElseThrow(() -> new RuntimeException("해당 POST 없음"));
-        Users user = userRepository.findById(user_id).orElseThrow(() -> new RuntimeException("해당 USER 없음"));
+        User user = userRepository.findById(user_id).orElseThrow(() -> new RuntimeException("해당 USER 없음"));
 
         return commentRepository.save(requestDto.toEntity(post,user)).getId();
     }
