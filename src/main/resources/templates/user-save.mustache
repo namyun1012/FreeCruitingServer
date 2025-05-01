@@ -5,13 +5,13 @@
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
 </head>
 <body>
-<!-- 현재 html 만 만든 상태. -->
+
 <div class="container mt-5">
     <h2 class="mb-4">회원가입</h2>
-    <form action="/register" method="post">
+    <form>
         <div class="mb-3">
-            <label for="userName" class="form-label">이름</label>
-            <input type="text" class="form-control" id="userName" name="userName" required>
+            <label for="name" class="form-label">이름</label>
+            <input type="text" class="form-control" id="name" name="name" required>
         </div>
         <div class="mb-3">
             <label for="email" class="form-label">이메일</label>
@@ -21,7 +21,7 @@
             <label for="password" class="form-label">비밀번호</label>
             <input type="password" class="form-control" id="password" name="password" required>
         </div>
-        <button type="submit" class="btn btn-primary">가입하기</button>
+        <button type="button" class="btn btn-primary" onclick="saveUser()">가입하기</button>
     </form>
 </div>
 

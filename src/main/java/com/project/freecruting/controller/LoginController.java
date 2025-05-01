@@ -26,4 +26,8 @@ public class LoginController {
     }
 
 
+    // 회원 가입
+    @GetMapping("/signup")
+    public String signup() {return "user-save";}
+
 }

@@ -120,6 +120,30 @@ var main = {
         });
     },
 };
+
+
+function saveUser() {
+        var data = {
+            name : $('#name').val(),
+            email : $('#email').val(),
+            password : $('#password').val(),
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '/api/v1/user',
+            dataType: 'json',
+            contentType:'application/json; charset=utf-8',
+            data: JSON.stringify(data)
+        }).done(function() {
+            alert('회원 가입 완료');
+            window.location.href = '/';
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+}
+
+
 // Comment 함수는 이렇게 하는  것이 더 적절한 듯
 function saveComment(post_id) {
         var data = {

@@ -1,6 +1,7 @@
 package com.project.freecruting.controller;
 
 import com.project.freecruting.config.auth.dto.SessionUser;
+import com.project.freecruting.dto.user.UserSaveRequestDto;
 import com.project.freecruting.dto.user.UserUpdateRequestDto;
 import com.project.freecruting.model.User;
 import com.project.freecruting.service.UserService;
@@ -21,6 +22,23 @@ public class UserController {
 
     private final UserService userService;
     private final HttpSession httpSession;
+
+    @PostMapping("/user")
+    public ResponseEntity<?> save(@RequestBody UserSaveRequestDto requestDto) {
+        try {
+            Long result = userService.save(requestDto);
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(Map.of("message", "save successful"));
+
+        } catch (Exception e) {
+            System.out.println(e);
+            return ResponseEntity.
+                    status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "server error"));
+
+        }
+    }
 
     @PutMapping("/user")
     public ResponseEntity<?> update(@RequestBody UserUpdateRequestDto requestDto, @AuthenticationPrincipal OAuth2User oAuth2User) {
