@@ -19,15 +19,13 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 public class SecurityConfig {
     private final CustomerOAuth2UserService customerOAuth2UserService;
+    private final CustomerLoginSuccessHandler customerLoginSuccessHandler;
 
-    // 현재 로그 아웃 상태면 js 를 못 불러오는 듯?
     @Bean
     public WebSecurityCustomizer configure() {
         return (web) -> web.ignoring()
                 .requestMatchers("/index.js", "/js/**", "/css/**", "/images/**", "/webjars/**", "/static/**");
     }
-    
-    // 현재 로그인 안하면 js 못 불러오는 중
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -60,6 +58,7 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/login")              // 로그인 폼 페이지
                         .defaultSuccessUrl("/")
+                        .successHandler(customerLoginSuccessHandler)
                         .permitAll()
                 )
 

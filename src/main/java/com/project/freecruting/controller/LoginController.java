@@ -8,10 +8,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /*
-    IndexController 에 과하게 몰려서 Login 관련 front 는 이쪽에다 작성
+    IndexController 에 과하게 몰려서 Login 관련 code 는 이쪽에 작성
 
  */
 
@@ -24,6 +25,7 @@ public class LoginController {
     public String login() {
         return "login";
     }
+
 
 
     // 회원 가입

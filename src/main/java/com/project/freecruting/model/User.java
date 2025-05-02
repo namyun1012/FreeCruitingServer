@@ -9,6 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -66,7 +67,7 @@ public class User extends BaseTimeEntity implements UserDetails {
     // 아래는 자체 회원가입에 필요한 함수들
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("user"));
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + this.role.name()));
     }
 
     @Override
@@ -99,6 +100,4 @@ public class User extends BaseTimeEntity implements UserDetails {
         return true;
     }
 
-
-    
 }
