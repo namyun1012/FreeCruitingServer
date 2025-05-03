@@ -2,7 +2,7 @@ package com.project.freecruting.service;
 
 import com.project.freecruting.dto.user.UserSaveRequestDto;
 import com.project.freecruting.dto.user.UserUpdateRequestDto;
-import com.project.freecruting.model.Role;
+import com.project.freecruting.model.type.Role;
 import com.project.freecruting.model.User;
 import com.project.freecruting.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +26,7 @@ public class UserService implements UserDetailsService {
                 .name(dto.getName())
                 .role(Role.USER)
                 .provider("local")
+                .picture("empty") // picture 는 빈 상태로 둠
                 .build()).getId();
     }
 

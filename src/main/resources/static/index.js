@@ -313,7 +313,7 @@ function deletePartyMember(partymember_id, party_id) {
             contentType:'application/json; charset=utf-8'
         }).done(function() {
             alert('Out Party.');
-            window.location.href = '/party/update/' + party_id;
+            window.location.href = '/';
         }).fail(function (error) {
             alert(JSON.stringify(error));
         });

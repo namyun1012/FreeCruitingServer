@@ -1,4 +1,4 @@
-package com.project.freecruting.model;
+package com.project.freecruting.model.type;
 
 public enum SearchType {
     TITLE("title"),

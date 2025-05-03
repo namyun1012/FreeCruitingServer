@@ -1,4 +1,4 @@
-package com.project.freecruting.model;
+package com.project.freecruting.model.type;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

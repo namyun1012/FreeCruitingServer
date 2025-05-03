@@ -1,5 +1,5 @@
 package com.project.freecruting.config.auth.dto;
-import com.project.freecruting.model.Role;
+import com.project.freecruting.model.type.Role;
 import com.project.freecruting.model.User;
 import lombok.Builder;
 import lombok.Getter;

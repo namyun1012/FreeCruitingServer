@@ -1,5 +1,6 @@
 package com.project.freecruting.model;
 
+import com.project.freecruting.model.type.Role;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
