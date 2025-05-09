@@ -48,6 +48,23 @@
             {{/partyMembers}}
         </ul>
     </div>
+
+    <div class="mt-4">
+        <h5>파티 신청 내역</h5>
+        <ul class="list-group mt-3">
+            {{#partyJoinRequests}}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{user_name}}
+                </li>
+                <button type="button" class="btn btn-danger" onclick="approvePartyJoinRequest({{id}}, {{party.id}})">승인</button>
+                <button type="button" class="btn btn-danger" onclick="rejectPartyJoinRequest({{id}}, {{party.id}})">거절</button>
+            {{/partyJoinRequests}}
+
+            {{^partyJoinRequests}}
+                <li class="list-group-item text-muted">파티 신청 내역 없음</li>
+            {{/partyJoinRequests}}
+        </ul>
+    </div>
 </div>
 
 {{>layout/footer}}

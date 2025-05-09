@@ -3,6 +3,7 @@ package com.project.freecruting.controller;
 import com.project.freecruting.config.auth.LoginUser;
 import com.project.freecruting.config.auth.dto.SessionUser;
 import com.project.freecruting.dto.comment.CommentListResponseDto;
+import com.project.freecruting.dto.party.PartyJoinRequestListResponseDto;
 import com.project.freecruting.dto.party.PartyListResponseDto;
 import com.project.freecruting.dto.party.PartyMemberListResponseDto;
 import com.project.freecruting.dto.party.PartyResponseDto;
@@ -31,7 +32,7 @@ public class IndexController {
     private final CommentService commentService;
     private final PartyService partyService;
     private final PartyMemberService partyMemberService;
-
+    private final PartyJoinRequestService partyJoinRequestService;
 
     // 전체 용도
     @GetMapping("/")
@@ -191,7 +192,10 @@ public class IndexController {
 
         // Party Member 들을 보여줌.
         List<PartyMemberListResponseDto> partyMembers = partyMemberService.findByPartyId(party.getId());
+
+        List<PartyJoinRequestListResponseDto> partyJoinRequests = partyJoinRequestService.findPendingByPartyId(party.getId());
         model.addAttribute("partyMembers", partyMembers);
+        model.addAttribute("partyJoinRequests", partyJoinRequests);
         return "party-update";
     }
 

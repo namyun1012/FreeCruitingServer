@@ -319,4 +319,58 @@ function deletePartyMember(partymember_id, party_id) {
         });
 }
 
+// Party Join Request 영역
+
+function savePartyJoinRequest(party_id) {
+        var data = {
+            party_id: party_id,
+            party_role: "MEMBER"
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '/api/v1/party_join_request',
+            dataType: 'json',
+            contentType:'application/json; charset=utf-8',
+            data: JSON.stringify(data)
+        }).done(function() {
+            alert('파티 가입 요청.');
+            window.location.href = '/party/read/' + party_id;
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+}
+
+function approvePartyJoinRequest(id ,party_id) {
+
+        $.ajax({
+            type: 'POST',
+            url: '/api/v1/party_join_request/' + id + '/approve',
+            dataType: 'json',
+            contentType:'application/json; charset=utf-8',
+        }).done(function() {
+            alert('파티 가입 승인.');
+            window.location.href = '/party/update/' + party_id;
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+
+}
+
+function rejectPartyJoinRequest(id ,party_id) {
+
+        $.ajax({
+            type: 'POST',
+            url: '/api/v1/party_join_request/' + id + '/reject',
+            dataType: 'json',
+            contentType:'application/json; charset=utf-8',
+        }).done(function() {
+            alert('파티 가입 거절.');
+            window.location.href = '/party/update/' + party_id;
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+
+}
+
 main.init()
