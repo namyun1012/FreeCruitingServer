@@ -35,7 +35,7 @@ public class PostRepositoryTest {
                 .title(title)
                 .content(content)
                 .author("abc")
-                .type("abc")
+                .type(Post.PostType.REVIEW)
                 .build());
 
         List<Post> postList = postRepository.findAll();
@@ -52,7 +52,7 @@ public class PostRepositoryTest {
                     .title("title")
                     .content("content")
                     .author("author")
-                    .type("type")
+                    .type(Post.PostType.REVIEW)
                     .imageURL("imageURL")
                     .build());
 

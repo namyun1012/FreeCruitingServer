@@ -44,7 +44,7 @@ public class PostApiControllerTest {
     public void register_post() throws Exception {
         String title = "title";
         String content = "content";
-        String type = "type";
+        String type = "REVIEW";
         PostSaveRequestDto requestDto = PostSaveRequestDto.builder()
                 .title(title)
                 .content(content)
@@ -73,7 +73,7 @@ public class PostApiControllerTest {
                 .content("content")
                 .author("author")
                 .imageURL("temp")
-                .type("type")
+                .type(Post.PostType.REVIEW)
                 .build());
 
         Long updateId = savedPost.getId();
