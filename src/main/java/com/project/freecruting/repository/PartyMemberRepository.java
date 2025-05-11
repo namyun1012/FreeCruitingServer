@@ -16,4 +16,5 @@ public interface PartyMemberRepository extends JpaRepository<PartyMember, Long> 
 
     List<PartyMember> findByPartyId(Long partyId);
     Page<PartyMember> findByUserId(Long userId, Pageable pageable);
+
 }

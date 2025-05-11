@@ -43,6 +43,10 @@ public class User extends BaseTimeEntity implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PartyMember> partyMembers;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<PartyJoinRequest> partyJoinRequests; // 필드 초기화
+
+
     @Builder
     public User(String name, String email, String picture, Role role, String password, String provider) {
         this.name = name;

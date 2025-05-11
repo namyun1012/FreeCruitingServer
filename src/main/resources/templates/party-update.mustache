@@ -40,8 +40,8 @@
                     {{#party_role}}
                         {{party_role}}
                     {{/party_role}}
+                    <button type="button" class="btn btn-danger" onclick="deletePartyMember({{id}}, {{party.id}})">Out</button>
                 </li>
-                <button type="button" class="btn btn-danger" onclick="deletePartyMember({{id}}, {{party.id}})">Out</button>
             {{/partyMembers}}
             {{^partyMembers}}
                 <li class="list-group-item text-muted">No party member</li>
@@ -55,9 +55,12 @@
             {{#partyJoinRequests}}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     {{user_name}}
+                    <div>
+                        <button type="button" class="btn btn-primary btn-sm" onclick="approvePartyJoinRequest({{id}}, {{party.id}})">승인</button>
+                        <button type="button" class="btn btn-danger btn-sm" onclick="rejectPartyJoinRequest({{id}}, {{party.id}})">거절</button>
+                    </div>
                 </li>
-                <button type="button" class="btn btn-danger" onclick="approvePartyJoinRequest({{id}}, {{party.id}})">승인</button>
-                <button type="button" class="btn btn-danger" onclick="rejectPartyJoinRequest({{id}}, {{party.id}})">거절</button>
+
             {{/partyJoinRequests}}
 
             {{^partyJoinRequests}}
