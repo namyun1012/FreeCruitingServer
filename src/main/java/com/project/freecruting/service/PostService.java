@@ -8,9 +8,11 @@ import com.project.freecruting.model.Post;
 import com.project.freecruting.model.type.SearchType;
 import com.project.freecruting.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +23,13 @@ import java.util.stream.Collectors;
 @Service
 public class PostService {
     private final PostRepository postRepository;
+    private final RedisTemplate<String, String> redisTemplate;
+
+    @Value("${app.use-redis-for-views:false}")
+    private boolean viewCountingStrategy;
+
+    private static final String VIEW_COUNT_KEY_PREFIX = "post:views:";
+
 
     @Transactional
     public Long save(PostSaveRequestDto requestDto, Long author_id) {
@@ -57,7 +66,18 @@ public class PostService {
     @Transactional
     public PostResponseDto findById(Long id) {
         Post entity = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글 없음. id=" + id));
-        postRepository.increaseViews(id);
+        System.out.println(viewCountingStrategy);
+        // redis 사용시
+        if(viewCountingStrategy) {
+            String key = VIEW_COUNT_KEY_PREFIX + id;
+            redisTemplate.opsForValue().increment(key);
+        }
+        
+        // redis 미사용시
+        else {
+            postRepository.increaseViews(id);
+        }
+
         return new PostResponseDto(entity);
     }
 
@@ -113,5 +133,10 @@ public class PostService {
         }
 
         return result;
+    }
+
+    // Support 함수
+    public static String getViewCountKeyPrefix() {
+        return VIEW_COUNT_KEY_PREFIX;
     }
 }
