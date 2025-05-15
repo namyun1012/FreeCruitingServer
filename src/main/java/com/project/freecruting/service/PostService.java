@@ -13,10 +13,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -26,7 +28,7 @@ public class PostService {
     private final RedisTemplate<String, String> redisTemplate;
 
     @Value("${app.use-redis-for-views:false}")
-    private boolean viewCountingStrategy;
+    private boolean useRedis;
 
     private static final String VIEW_COUNT_KEY_PREFIX = "post:views:";
 
@@ -66,9 +68,9 @@ public class PostService {
     @Transactional
     public PostResponseDto findById(Long id) {
         Post entity = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글 없음. id=" + id));
-        System.out.println(viewCountingStrategy);
+
         // redis 사용시
-        if(viewCountingStrategy) {
+        if(useRedis) {
             String key = VIEW_COUNT_KEY_PREFIX + id;
             redisTemplate.opsForValue().increment(key);
         }
@@ -135,8 +137,57 @@ public class PostService {
         return result;
     }
 
-    // Support 함수
-    public static String getViewCountKeyPrefix() {
-        return VIEW_COUNT_KEY_PREFIX;
+    // Support Function
+    // post view redis schedule
+    @Scheduled(fixedRateString = "${app.view-counting.sync-interval-ms:300000}")
+    @Transactional
+    public void syncViewsFromRedisToDb() {
+        if(!useRedis) return;
+
+        String pattern = VIEW_COUNT_KEY_PREFIX + "*";
+
+        // 주의: keys() 명령어는 Redis에 데이터가 많을 경우 블록킹될 수 있습니다.
+        // 운영 환경에서는 성능을 위해 scan() 명령어를 사용하는 것을 고려하세요.
+        Set<String> keys = redisTemplate.keys(pattern);
+
+        if (keys == null || keys.isEmpty()) {
+            return;
+        }
+
+        System.out.println("Redis to DB view sync started.");
+        for (String key : keys) {
+            try {
+
+                // Redis에서 현재 조회수 값 가져오기
+                String countStr = redisTemplate.opsForValue().get(key);
+                if (countStr == null) {
+                    // Key might have expired or been deleted between keys() and get()
+                    continue;
+                }
+
+                Long increment = Long.parseLong(countStr);
+                String postIdStr = key.substring(VIEW_COUNT_KEY_PREFIX.length());
+                Long postId = Long.parseLong(postIdStr);
+
+                if (increment > 0) {
+                    // 데이터베이스 업데이트: 현재 DB 조회수에 Redis 값을 더함
+                    postRepository.increaseViews(postId, increment);
+
+                    // DB 업데이트 성공 후 Redis 키 삭제 (원자적 작업은 아님)
+                    // 만약 DB 업데이트 실패 시 Redis 키는 남아서 다음 스케줄러에 재시도됩니다.
+                    redisTemplate.delete(key);
+                } else {
+                    // 값이 0 이거나 음수(increment 사용 시 발생하면 안 됨)면 키 삭제
+                    redisTemplate.delete(key);
+                }
+
+            } catch (NumberFormatException e) {
+                System.err.println("Error parsing Redis key or value: " + key + ", value: " + redisTemplate.opsForValue().get(key));
+                redisTemplate.delete(key);
+            } catch (Exception e) {
+                System.err.println("Error syncing view count for key " + key + ": " + e.getMessage());
+            }
+        }
+        System.out.println("Redis to DB view sync finished.");
     }
 }
