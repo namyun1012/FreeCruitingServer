@@ -79,9 +79,9 @@ public class IndexController {
     }
 
     @GetMapping("/post/update/{id}")
-    public String postUpdate(@PathVariable Long id, Model model)
+    public String postUpdate(@PathVariable Long id, Model model, @LoginUser SessionUser user)
     {
-        PostResponseDto dto = postService.findById(id);
+        PostResponseDto dto = postService.findById(id, user.getId());
         model.addAttribute("post", dto);
         return "post-update";
     }
@@ -89,7 +89,11 @@ public class IndexController {
     @GetMapping("/post/read/{id}")
     public String postRead(@PathVariable Long id, Model model, @LoginUser SessionUser user,
                            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
-        PostResponseDto dto = postService.findById(id);
+
+        PostResponseDto dto;
+        if (user == null)  dto = postService.findById(id, null);
+        else dto = postService.findById(id, user.getId());
+
         model.addAttribute("post",dto);
 
         // 댓글 Paging 넣어 주기

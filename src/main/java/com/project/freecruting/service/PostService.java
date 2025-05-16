@@ -5,9 +5,11 @@ import com.project.freecruting.dto.post.PostResponseDto;
 import com.project.freecruting.dto.post.PostSaveRequestDto;
 import com.project.freecruting.dto.post.PostUpdateRequestDto;
 import com.project.freecruting.model.Post;
+import com.project.freecruting.model.User;
 import com.project.freecruting.model.type.SearchType;
 import com.project.freecruting.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +19,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,7 +34,7 @@ public class PostService {
     private boolean useRedis;
 
     private static final String VIEW_COUNT_KEY_PREFIX = "post:views:";
-
+    private static final String VIEWED_USERS_KEY_PREFIX = "post:viewed_users:";
 
     @Transactional
     public Long save(PostSaveRequestDto requestDto, Long author_id) {
@@ -66,16 +69,31 @@ public class PostService {
     }
 
     @Transactional
-    public PostResponseDto findById(Long id) {
+    public PostResponseDto findById(Long id, Long user_id) {
         Post entity = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글 없음. id=" + id));
 
         // redis 사용시
-        if(useRedis) {
-            String key = VIEW_COUNT_KEY_PREFIX + id;
-            redisTemplate.opsForValue().increment(key);
+        if(useRedis && user_id != null) {
+            try {
+//            String key = VIEW_COUNT_KEY_PREFIX + id;
+//            redisTemplate.opsForValue().increment(key);
+            String userSetKey = VIEWED_USERS_KEY_PREFIX + id;
+            Long addedCount = redisTemplate.opsForSet().add(userSetKey, user_id.toString());
+
+            if (addedCount != null && addedCount > 0) {
+                String viewCountKey = VIEW_COUNT_KEY_PREFIX + id;
+                redisTemplate.opsForValue().increment(viewCountKey);
+
+                redisTemplate.expire(userSetKey, Duration.ofHours(24));
+            }
+            }
+            catch (Exception e) {
+                System.out.println(e);
+            }
+
         }
         
-        // redis 미사용시
+        // redis 미사용시, 로그인 안한 유저들 포함
         else {
             postRepository.increaseViews(id);
         }
@@ -142,10 +160,11 @@ public class PostService {
     @Scheduled(fixedRateString = "${app.view-counting.sync-interval-ms:300000}")
     @Transactional
     public void syncViewsFromRedisToDb() {
+
         if(!useRedis) return;
 
         String pattern = VIEW_COUNT_KEY_PREFIX + "*";
-
+        System.out.println("Attempting to get Redis keys with pattern: " + pattern);
         // 주의: keys() 명령어는 Redis에 데이터가 많을 경우 블록킹될 수 있습니다.
         // 운영 환경에서는 성능을 위해 scan() 명령어를 사용하는 것을 고려하세요.
         Set<String> keys = redisTemplate.keys(pattern);

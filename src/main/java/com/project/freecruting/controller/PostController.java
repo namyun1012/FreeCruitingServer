@@ -45,8 +45,13 @@ public class PostController {
     }
 
     @GetMapping("/post/{id}")
-    public PostResponseDto findById(@PathVariable Long id) {
-        return postService.findById(id);
+    public PostResponseDto findById(@PathVariable Long id, @LoginUser SessionUser user) {
+
+        if(user == null) {
+            return postService.findById(id, null);
+        }
+
+        return postService.findById(id, user.getId());
     }
 
     @DeleteMapping("/post/{id}")
