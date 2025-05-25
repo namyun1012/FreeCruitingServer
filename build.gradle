@@ -33,6 +33,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.session:spring-session-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'com.mysql:mysql-connector-j'
 	compileOnly 'org.projectlombok:lombok'
 	// runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'
