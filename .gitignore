@@ -36,8 +36,8 @@ out/
 ### VS Code ###
 .vscode/
 
-#application-oauth.properties
-#application.properties
+application-oauth.properties
+application.properties
 
 # Compiled class file
 *.class
