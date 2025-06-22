@@ -9,11 +9,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @RequiredArgsConstructor
 @Configuration
@@ -29,6 +31,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                // https 부분
+                .requiresChannel(channel -> channel
+                        .anyRequest().requiresSecure())
 
                 .csrf(csrf -> csrf.disable()) // 임시로 비활성화, 켜 놓는 것이 좋긴 함
                 .authorizeHttpRequests(auth -> auth
@@ -69,6 +74,7 @@ public class SecurityConfig {
                             response.setHeader("X-Frame-Options", "ALLOWALL");
                         })
                 );
+
         return http.build();
     }
 
