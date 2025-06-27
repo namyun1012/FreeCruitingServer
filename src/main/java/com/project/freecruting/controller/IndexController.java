@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,11 +35,14 @@ public class IndexController {
     private final PartyMemberService partyMemberService;
     private final PartyJoinRequestService partyJoinRequestService;
 
+    private static final String PAGE_DEFAULT_VALUE = "1";
+    private static final String SIZE_DEFAULT_VALUE = "15";
+
     // 전체 용도
     @GetMapping("/")
     public String index(Model model, @LoginUser SessionUser user,
-                        @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
-        Page<PostListResponseDto> postPage = postService.findAllPage(page, size);
+                        @RequestParam(defaultValue = PAGE_DEFAULT_VALUE) int page, @RequestParam(defaultValue = SIZE_DEFAULT_VALUE) int size) {
+        Page<PostListResponseDto> postPage = postService.findAllPage(page - 1, size);
 
         model.addAttribute("posts", postPage.getContent());
         model = supportPaging(model, postPage);
@@ -53,10 +57,10 @@ public class IndexController {
     // type 변환 용도
     @GetMapping("/posts/{type}")
     public String postsType(Model model, @LoginUser SessionUser user, @PathVariable String type,
-                            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
+                            @RequestParam(defaultValue = PAGE_DEFAULT_VALUE) int page, @RequestParam(defaultValue = SIZE_DEFAULT_VALUE) int size) {
 
         Page<PostListResponseDto> postPage;
-        postPage = postService.findByType(type, page, size);
+        postPage = postService.findByType(type, page - 1, size);
 
         model.addAttribute("posts", postPage.getContent());
         model = supportPaging(model, postPage);
@@ -88,7 +92,7 @@ public class IndexController {
 
     @GetMapping("/post/read/{id}")
     public String postRead(@PathVariable Long id, Model model, @LoginUser SessionUser user,
-                           @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
+                           @RequestParam(defaultValue = PAGE_DEFAULT_VALUE) int page, @RequestParam(defaultValue = SIZE_DEFAULT_VALUE) int size) {
 
         PostResponseDto dto;
         if (user == null)  dto = postService.findById(id, null);
@@ -97,7 +101,7 @@ public class IndexController {
         model.addAttribute("post",dto);
 
         // 댓글 Paging 넣어 주기
-        Page<CommentListResponseDto> commentPage = commentService.findAllPageByPostId(page, size, id);
+        Page<CommentListResponseDto> commentPage = commentService.findAllPageByPostId(page - 1, size, id);
 
         model = supportPaging(model, commentPage);
         model.addAttribute("comments", commentPage.getContent());
@@ -109,14 +113,14 @@ public class IndexController {
     // 검색 기능, front 에서 query 와 search_type 받아오기
     @GetMapping("/post/search/{type}/{query}")
     public String searchResult(Model model, @LoginUser SessionUser user, @PathVariable String query, @PathVariable String type,
-                               @RequestParam(defaultValue = "0") int page,
-                               @RequestParam(defaultValue = "5") int size) {
+                               @RequestParam(defaultValue = PAGE_DEFAULT_VALUE) int page,
+                               @RequestParam(defaultValue = SIZE_DEFAULT_VALUE) int size) {
         if(query.isBlank()) {
             return "redirect:/";
         }
 
         SearchType searchType = SearchType.fromString(type);
-        Page<PostListResponseDto> postPage = postService.search(query, searchType, page, size);
+        Page<PostListResponseDto> postPage = postService.search(query, searchType, page - 1, size);
         model.addAttribute("posts", postPage.getContent());
         model = supportPaging(model, postPage);
 
@@ -132,8 +136,8 @@ public class IndexController {
 
     @GetMapping("/user")
     public String userRead(Model model, @LoginUser SessionUser user,
-                           @RequestParam(defaultValue = "0") int page,
-                           @RequestParam(defaultValue = "5") int size) {
+                           @RequestParam(defaultValue = PAGE_DEFAULT_VALUE) int page,
+                           @RequestParam(defaultValue = SIZE_DEFAULT_VALUE) int size) {
         if(user == null) {
             return "/";
         }
@@ -142,7 +146,7 @@ public class IndexController {
         model.addAttribute("userEmail", user.getEmail());
         model.addAttribute("userPicture", user.getPicture());
 
-        Page<PartyMemberListResponseDto> partyMemberPage = partyMemberService.findByUserId(user.getId(),page, size);
+        Page<PartyMemberListResponseDto> partyMemberPage = partyMemberService.findByUserId(user.getId(),page - 1, size);
         model.addAttribute("partyMembers", partyMemberPage);
         model = supportPaging(model, partyMemberPage);
 
@@ -165,8 +169,8 @@ public class IndexController {
 
     @GetMapping("/party")
     public String partys(Model model, @LoginUser SessionUser user,
-                         @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
-        Page<PartyListResponseDto> partyPage = partyService.findAllPage(page, size);
+                         @RequestParam(defaultValue = PAGE_DEFAULT_VALUE) int page, @RequestParam(defaultValue = SIZE_DEFAULT_VALUE) int size) {
+        Page<PartyListResponseDto> partyPage = partyService.findAllPage(page - 1, size);
 
         model.addAttribute("partys", partyPage.getContent());
         model = supportPaging(model, partyPage);
@@ -216,23 +220,54 @@ public class IndexController {
 
     // Paging 사용시 Page Support 하기 위함
     private Model supportPaging(Model model, Page<?> page) {
-        model.addAttribute("currentPage", page.getNumber());
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("hasPrevPage", page.hasPrevious());
-        model.addAttribute("hasNextPage", page.hasNext());
-        model.addAttribute("prevPage", Math.max(0, page.getNumber() - 1));
-        model.addAttribute("nextPage", page.getNumber() + 1);
 
-        List<Map<String, Object>> pages = IntStream.range(0, page.getTotalPages())
-                .mapToObj(i -> {
-                    Map<String, Object> pageInfo = new HashMap<>();
-                    pageInfo.put("number", i);
-                    pageInfo.put("isCurrent", i == page.getNumber());
-                    return pageInfo;
-                })
-                .collect(Collectors.toList());
+        int currentPage = page.getNumber();
+        int totalPages = page.getTotalPages();
+
+        int maxPagesToShow = 10;
+        int startPage, endPage;
+
+        if (totalPages <= maxPagesToShow) {
+            startPage = 0;
+            endPage = totalPages - 1;
+        } else {
+            startPage = Math.max(0, currentPage - (maxPagesToShow / 2));
+            endPage = Math.min(totalPages - 1, currentPage + (maxPagesToShow / 2) - (maxPagesToShow % 2 == 0 ? 1 : 0));
+
+            if (endPage - startPage + 1 < maxPagesToShow) {
+                if(startPage == 0) {
+                    endPage = Math.min(totalPages - 1, startPage + maxPagesToShow - 1);
+                }
+
+                else if(endPage == totalPages - 1) {
+                    startPage = Math.max(0, totalPages - maxPagesToShow);
+                }
+            }
+        }
+
+        List<PageInfo> pages = new ArrayList<>();
+
+        for (int i = startPage; i <= endPage; i++) {
+            pages.add(new PageInfo(i + 1, i == currentPage));
+        }
 
         model.addAttribute("pages", pages);
+        model.addAttribute("hasPrevPage", page.hasPrevious());
+        model.addAttribute("prevPage", page.previousOrFirstPageable().getPageNumber() + 1); // 1부터 시작하도록 +1
+        model.addAttribute("hasNextPage", page.hasNext());
+        model.addAttribute("nextPage", page.nextOrLastPageable().getPageNumber() + 1); // 1부터 시작하도록 +1
+        model.addAttribute("currentPage", currentPage + 1); // 현재 페이지 번호도 1부터 시작하도록 +1
+
         return model;
+    }
+
+    public static class PageInfo {
+        public int number;
+        public boolean isCurrent;
+
+        public PageInfo(int number, boolean isCurrent) {
+            this.number = number;
+            this.isCurrent = isCurrent;
+        }
     }
 }

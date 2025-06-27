@@ -114,7 +114,7 @@ public class PostService {
     public Page<PostListResponseDto> findAllPage(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
 
-        return postRepository.findAllByOrderByModifiedDateDesc(pageable)
+        return postRepository.findAllByOrderByIdDesc(pageable)
                 .map(PostListResponseDto::new);
     }
 
@@ -124,7 +124,7 @@ public class PostService {
         Pageable pageable = PageRequest.of(page, size);
 
 
-        return postRepository.findByTypeOrderByModifiedDateDesc(pageable, postType)
+        return postRepository.findByTypeOrderByIdDesc(pageable, postType)
                 .map(PostListResponseDto:: new);
     }
 
