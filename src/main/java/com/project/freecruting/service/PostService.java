@@ -4,6 +4,8 @@ import com.project.freecruting.dto.post.PostListResponseDto;
 import com.project.freecruting.dto.post.PostResponseDto;
 import com.project.freecruting.dto.post.PostSaveRequestDto;
 import com.project.freecruting.dto.post.PostUpdateRequestDto;
+import com.project.freecruting.exception.ForbiddenException;
+import com.project.freecruting.exception.NotFoundException;
 import com.project.freecruting.model.Post;
 import com.project.freecruting.model.User;
 import com.project.freecruting.model.type.SearchType;
@@ -43,11 +45,11 @@ public class PostService {
 
     @Transactional
     public Long update(Long id, PostUpdateRequestDto requestDto, Long author_id) {
-        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글 없음. id=" + id));
+        Post post = postRepository.findById(id).orElseThrow(() -> new NotFoundException("해당 게시글 없음. id=" + id));
         Long post_author_id = post.getAuthor_id();
 
         if (!post_author_id.equals(author_id)) {
-            return 0L;
+            throw new ForbiddenException("해당 post의 작성자가 아닙니다");
         }
 
         post.update(requestDto.getTitle(), requestDto.getContent(), requestDto.getImageURL(), Post.PostType.valueOf(requestDto.getType()));
@@ -56,12 +58,12 @@ public class PostService {
 
     @Transactional
     public Long delete(Long id, Long author_id) {
-        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글 없음. id = " + id));
+        Post post = postRepository.findById(id).orElseThrow(() -> new NotFoundException("해당 게시글 없음. id = " + id));
 
         Long post_author_id = post.getAuthor_id();
 
         if (!post_author_id.equals(author_id)) {
-            return 0L;
+            throw new ForbiddenException("해당 post의 작성자가 아닙니다");
         }
 
         postRepository.delete(post);
@@ -70,7 +72,7 @@ public class PostService {
 
     @Transactional
     public PostResponseDto findById(Long id, Long user_id) {
-        Post entity = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글 없음. id=" + id));
+        Post entity = postRepository.findById(id).orElseThrow(() -> new NotFoundException("해당 게시글 없음. id=" + id));
 
         // redis 사용시
         if(useRedis && user_id != null) {

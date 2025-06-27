@@ -43,14 +43,10 @@ public class PartyJoinRequestController {
 
         Long user_id = user.getId();
 
-        try {
-            partyJoinRequestService.approve(request_id, user_id);
-            return ResponseEntity.ok().body("요청 승인");
-        }
 
-        catch (Exception e) {
-            return  ResponseEntity.ok().body("요청 승인 실패");
-        }
+        partyJoinRequestService.approve(request_id, user_id);
+        return ResponseEntity.ok().body("요청 승인");
+
     }
 
     @Transactional
@@ -59,14 +55,8 @@ public class PartyJoinRequestController {
 
         Long user_id = user.getId();
 
-        try {
-            partyJoinRequestService.reject(request_id, user_id);
-            return ResponseEntity.ok().body("요청 거부");
-        }
-
-        catch (Exception e) {
-            return ResponseEntity.ok().body("요청 거부 실패");
-        }
+        partyJoinRequestService.reject(request_id, user_id);
+        return ResponseEntity.ok().body("요청 거부");
 
     }
 }

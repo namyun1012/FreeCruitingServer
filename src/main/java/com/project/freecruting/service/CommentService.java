@@ -3,6 +3,8 @@ package com.project.freecruting.service;
 import com.project.freecruting.dto.comment.CommentListResponseDto;
 import com.project.freecruting.dto.comment.CommentSaveRequestDto;
 import com.project.freecruting.dto.comment.CommentUpdateRequestDto;
+import com.project.freecruting.exception.ForbiddenException;
+import com.project.freecruting.exception.NotFoundException;
 import com.project.freecruting.model.Comment;
 import com.project.freecruting.model.Post;
 import com.project.freecruting.model.User;
@@ -44,19 +46,19 @@ public class CommentService {
     @Transactional
     public Long save(CommentSaveRequestDto requestDto, Long user_id) {
         Long post_id = requestDto.getPost_id();
-        Post post = postRepository.findById(post_id).orElseThrow(() -> new RuntimeException("해당 POST 없음"));
-        User user = userRepository.findById(user_id).orElseThrow(() -> new RuntimeException("해당 USER 없음"));
+        Post post = postRepository.findById(post_id).orElseThrow(() -> new NotFoundException("해당 POST 없음"));
+        User user = userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("해당 USER 없음"));
 
         return commentRepository.save(requestDto.toEntity(post,user)).getId();
     }
 
     @Transactional
     public Long update(Long id, CommentUpdateRequestDto requestDto, Long author_id) {
-        Comment comment = commentRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 COMMENT 없음. id=" + id));
+        Comment comment = commentRepository.findById(id).orElseThrow(() -> new NotFoundException("해당 COMMENT 없음. id=" + id));
         Long comment_author_id = comment.getUser().getId();
 
         if (!comment_author_id.equals(author_id)) {
-            return 0L;
+            throw new ForbiddenException("해당 댓글의 작성자 아님");
         }
 
         comment.update(requestDto.getContent());
@@ -65,11 +67,11 @@ public class CommentService {
 
     @Transactional
     public Long delete(Long id, Long author_id) {
-        Comment comment = commentRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 COMMENT 없음. id = " + id));
+        Comment comment = commentRepository.findById(id).orElseThrow(() -> new NotFoundException("해당 COMMENT 없음. id = " + id));
         Long comment_author_id = comment.getUser().getId();
 
         if (!comment_author_id.equals(author_id)) {
-            return 0L;
+            throw new ForbiddenException("해당 댓글의 작성자 아님");
         }
 
         commentRepository.delete(comment);

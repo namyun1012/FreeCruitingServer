@@ -5,6 +5,8 @@ import com.project.freecruting.dto.party.*;
 import com.project.freecruting.dto.post.PostListResponseDto;
 import com.project.freecruting.dto.post.PostResponseDto;
 import com.project.freecruting.dto.post.PostSaveRequestDto;
+import com.project.freecruting.exception.ForbiddenException;
+import com.project.freecruting.exception.NotFoundException;
 import com.project.freecruting.model.Comment;
 import com.project.freecruting.model.Party;
 import com.project.freecruting.model.PartyMember;
@@ -38,11 +40,11 @@ public class PartyService {
 
     @Transactional
     public Long update(Long id, PartyUpdateRequestDto requestDto, Long user_id) {
-        Party party = partyRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 PARTY 없음. id=" + id));
+        Party party = partyRepository.findById(id).orElseThrow(() -> new NotFoundException("해당 PARTY 없음. id=" + id));
         Long party_owner_id = party.getOwner_id();
 
         if (!party_owner_id.equals(user_id)) {
-            return 0L;
+            throw new ForbiddenException("해당 파티의 오너가 아닙니다");
         }
 
         party.update(requestDto.getName(), requestDto.getDescription(), requestDto.getMax_number());
@@ -51,12 +53,12 @@ public class PartyService {
 
     @Transactional
     public Long delete(Long id, Long user_id) {
-        Party party = partyRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 PARTY 없음. id = " + id));
+        Party party = partyRepository.findById(id).orElseThrow(() -> new NotFoundException("해당 PARTY 없음. id = " + id));
 
         Long party_owner_id = party.getOwner_id();
 
         if (!party_owner_id.equals(user_id)) {
-            return 0L;
+            throw new ForbiddenException("해당 파티의 오너가 아닙니다");
         }
 
         partyRepository.delete(party);
@@ -73,7 +75,7 @@ public class PartyService {
 
     @Transactional
     public PartyResponseDto findById(Long id) {
-        Party entity = partyRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 PARTY 없음. id=" + id));
+        Party entity = partyRepository.findById(id).orElseThrow(() -> new NotFoundException("해당 PARTY 없음. id=" + id));
         return new PartyResponseDto(entity);
     }
 

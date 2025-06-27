@@ -1,6 +1,9 @@
 package com.project.freecruting.service;
 
 import com.project.freecruting.dto.party.*;
+import com.project.freecruting.exception.ForbiddenException;
+import com.project.freecruting.exception.InvalidStateException;
+import com.project.freecruting.exception.NotFoundException;
 import com.project.freecruting.model.Party;
 import com.project.freecruting.model.PartyMember;
 import com.project.freecruting.model.User;
@@ -29,17 +32,17 @@ public class PartyMemberService {
     public Long save(PartyMemberSaveRequestDto requestDto, Long user_id) {
         Long party_id = requestDto.getParty_id();
 
-        User user = userRepository.findById(user_id).orElseThrow(() -> new RuntimeException("해당 USER 없음"));
-        Party party = partyRepository.findById(party_id).orElseThrow(() -> new RuntimeException("해당 PARTY 없음"));;
+        User user = userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("해당 USER 없음"));
+        Party party = partyRepository.findById(party_id).orElseThrow(() -> new NotFoundException("해당 PARTY 없음"));;
 
         // 해당 Party 에 이미 당사자가 존재하는 경우 안 됨
         if(partyMemberRepository.findByPartyIdAndUserId(party_id, user_id).isPresent()) {
-            throw new IllegalStateException("이미 참가한 유저입니다.");
+            throw new InvalidStateException("이미 참가한 유저입니다.");
         }
 
         // 해당 Party 의 Max Number Logic 을 확인하는 함수를 넣을 것
         if(party.getPartyMembers() != null && party.getPartyMembers().size() == party.getMax_number()) {
-            throw new IllegalStateException("파티 인원 초과입니다.");
+            throw new InvalidStateException("파티 인원 초과입니다.");
         }
 
         PartyMember result = partyMemberRepository.save(requestDto.toEntity(party, user));
@@ -49,14 +52,14 @@ public class PartyMemberService {
 
     @Transactional
     public Long update(Long id, PartyMemberUpdateRequestDto requestDto, Long user_id) {
-        PartyMember partyMember = partyMemberRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 PARTY MEMBER 없음. id=" + id));
+        PartyMember partyMember = partyMemberRepository.findById(id).orElseThrow(() -> new NotFoundException("해당 PARTY MEMBER 없음. id=" + id));
         Long party_member_id = partyMember.getUser().getId();
         Long party_owner_id = partyMember.getParty().getOwner_id();
 
         
         // 자기 자신이 아니거나, 파티의 소유주가 아닌 경우 금지
         if (!party_member_id.equals(user_id) && !party_owner_id.equals(user_id)) {
-            return 0L;
+            throw new ForbiddenException("해당 파티 멤버에 대한 권한 없음");
         }
 
         partyMember.update(requestDto.getParty_role());
@@ -65,13 +68,13 @@ public class PartyMemberService {
 
     @Transactional
     public Long delete(Long id, Long user_id) {
-        PartyMember partyMember = partyMemberRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 PARTY MEMBER 없음. id=" + id));
+        PartyMember partyMember = partyMemberRepository.findById(id).orElseThrow(() -> new NotFoundException("해당 PARTY MEMBER 없음. id=" + id));
         Long party_member_id = partyMember.getUser().getId();
         Long party_owner_id = partyMember.getParty().getOwner_id();
 
         // 자기 자신이 아니거나, 파티의 소유주가 아닌 경우 금지
         if (!party_member_id.equals(user_id) && !party_owner_id.equals(user_id)) {
-            return 0L;
+            throw new ForbiddenException("해당 파티 멤버에 대한 권한 없음");
         }
 
         partyMemberRepository.delete(partyMember);

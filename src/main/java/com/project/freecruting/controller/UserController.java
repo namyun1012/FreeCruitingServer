@@ -25,19 +25,13 @@ public class UserController {
 
     @PostMapping("/user")
     public ResponseEntity<?> save(@RequestBody UserSaveRequestDto requestDto) {
-        try {
-            Long result = userService.save(requestDto);
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(Map.of("message", "save successful"));
 
-        } catch (Exception e) {
-            System.out.println(e);
-            return ResponseEntity.
-                    status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "server error"));
+        Long result = userService.save(requestDto);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(Map.of("message", "save successful"));
 
-        }
+
     }
 
     @PutMapping("/user")
