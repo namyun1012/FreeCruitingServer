@@ -25,6 +25,9 @@ public class Party extends BaseTimeEntity {
     @OneToMany(mappedBy = "party", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PartyMember> partyMembers;
 
+    @OneToMany(mappedBy = "party", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PartyJoinRequest> partyJoinRequests;
+
     // USER_ID
     @Column(nullable = false)
     private Long owner_id;
@@ -46,6 +49,5 @@ public class Party extends BaseTimeEntity {
         this.description    = description;
         this.max_number     = max_number;
     }
-
 
 }

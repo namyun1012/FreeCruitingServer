@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
 
 @Getter
 @NoArgsConstructor
@@ -16,7 +17,8 @@ public class PartyJoinRequest extends BaseTimeEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "party_id", foreignKey = @ForeignKey(name = "fk_party_join_request_party"))
     private Party party;
 
     @ManyToOne

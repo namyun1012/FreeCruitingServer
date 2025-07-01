@@ -71,6 +71,7 @@ public class PartyMemberService {
         PartyMember partyMember = partyMemberRepository.findById(id).orElseThrow(() -> new NotFoundException("해당 PARTY MEMBER 없음. id=" + id));
         Long party_member_id = partyMember.getUser().getId();
         Long party_owner_id = partyMember.getParty().getOwner_id();
+        Long party_id = partyMember.getParty().getId();
 
         // 자기 자신이 아니거나, 파티의 소유주가 아닌 경우 금지
         if (!party_member_id.equals(user_id) && !party_owner_id.equals(user_id)) {
@@ -79,9 +80,20 @@ public class PartyMemberService {
 
         partyMemberRepository.delete(partyMember);
 
+        // Owner 가 나갈려고 하고 비어 있지 않은 경우에는 아무나 찾아서 Owner 로 만듬
+        if(party_member_id.equals(party_owner_id) && partyMemberRepository.existsByPartyId(party_id)) {
+            PartyMember new_owner = partyMemberRepository.findRandomPartyMemberByPartyId(party_id)
+                    .orElseThrow(() -> new InvalidStateException("해당 Party 에 사람이 더 이상 존재하지 않음."));
+
+            new_owner.update("owner");
+            partyMemberRepository.save(new_owner);
+            partyRepository.updateOwnerIdById(new_owner.getUser().getId(), party_id);
+
+        }
+
         // 더 이상 인원 수가 없는 경우에 party 삭제
-        if(partyMemberRepository.findByPartyId(id).isEmpty()) {
-            partyRepository.deleteById(id);
+        if(!partyMemberRepository.existsByPartyId(party_id)) {
+            partyRepository.deleteById(party_id);
         }
 
         return id;
