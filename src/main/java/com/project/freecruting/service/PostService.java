@@ -103,6 +103,19 @@ public class PostService {
         return new PostResponseDto(entity);
     }
 
+    public PostResponseDto findByIdForUpdate(Long postId, Long userId) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new NotFoundException("해당 게시글 없음"));
+
+        if(!post.getAuthor_id().equals(userId)) {
+            throw new ForbiddenException("작성자만 수정 가능");
+        }
+
+        return new PostResponseDto(post);
+
+    }
+
+
+
     @Transactional(readOnly = true)
     public List<PostListResponseDto> findAllDesc() {
         return postRepository.findAllDesc().stream()

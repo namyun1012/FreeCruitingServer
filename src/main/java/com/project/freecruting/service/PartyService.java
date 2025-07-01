@@ -73,10 +73,20 @@ public class PartyService {
                 .map(PartyListResponseDto::new);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public PartyResponseDto findById(Long id) {
         Party entity = partyRepository.findById(id).orElseThrow(() -> new NotFoundException("해당 PARTY 없음. id=" + id));
         return new PartyResponseDto(entity);
     }
 
+    @Transactional(readOnly = true)
+    public PartyResponseDto findByIdForOwner(Long partyId, Long userId) {
+        Party party = partyRepository.findById(partyId).orElseThrow(() -> new NotFoundException("해당 PARTY 없음. id=" + partyId));
+
+        if(!party.getOwner_id().equals(userId)) {
+            throw new ForbiddenException("Party Owner 만 접근 가능합니다.");
+        }
+
+        return new PartyResponseDto(party);
+    }
 }

@@ -85,7 +85,7 @@ public class IndexController {
     @GetMapping("/post/update/{id}")
     public String postUpdate(@PathVariable Long id, Model model, @LoginUser SessionUser user)
     {
-        PostResponseDto dto = postService.findById(id, user.getId());
+        PostResponseDto dto = postService.findByIdForUpdate(id, user.getId());
         model.addAttribute("post", dto);
         return "post-update";
     }
@@ -193,9 +193,9 @@ public class IndexController {
     }
 
     @GetMapping("/party/update/{id}")
-    public String partyUpdate(@PathVariable Long id, Model model)
+    public String partyUpdate(@PathVariable Long id, Model model, @LoginUser SessionUser user)
     {
-        PartyResponseDto party = partyService.findById(id);
+        PartyResponseDto party = partyService.findByIdForOwner(id, user.getId());
         model.addAttribute("party", party);
 
         // Party Member 들을 보여줌.
