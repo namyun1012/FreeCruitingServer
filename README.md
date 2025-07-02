@@ -49,7 +49,7 @@ src
     └── resources
         ├── templates          # 뷰 템플릿 (Mustache 등)
         └── application.properties  # 환경 설정
----
+```
 
 ## ⚙️ 서버 설정
 
