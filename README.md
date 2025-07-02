@@ -50,3 +50,9 @@ src
         ├── templates          # 뷰 템플릿 (Mustache 등)
         └── application.properties  # 환경 설정
 ---
+
+## ⚙️ 서버 설정
+
+- HTTPS 기반 (`https://`)
+- 포트: `8443`
+- 인증서: application.properties 설정
