@@ -9,6 +9,7 @@ import com.project.freecruting.dto.party.PartyMemberListResponseDto;
 import com.project.freecruting.dto.party.PartyResponseDto;
 import com.project.freecruting.dto.post.PostListResponseDto;
 import com.project.freecruting.dto.post.PostResponseDto;
+import com.project.freecruting.model.Party;
 import com.project.freecruting.model.type.SearchType;
 import com.project.freecruting.service.*;
 import lombok.RequiredArgsConstructor;
@@ -217,6 +218,20 @@ public class IndexController {
         
         return "party-read";
     }
+
+    @GetMapping("/party/{partyId}/chat")
+    public String partyChatRoom(@PathVariable Long partyId, Model model, @LoginUser SessionUser user) {
+        PartyResponseDto party = partyService.findById(partyId);
+        model.addAttribute("partyId", party.getId());
+        model.addAttribute("partyName", party.getName());
+        model.addAttribute("userName", user.getName());
+        // 현재는 partyId 를 roomId 와 동일하게 사용함
+        model.addAttribute("roomId", party.getId());
+
+        return "party-chat";
+    }
+
+
 
     // Paging 사용시 Page Support 하기 위함
     private Model supportPaging(Model model, Page<?> page) {

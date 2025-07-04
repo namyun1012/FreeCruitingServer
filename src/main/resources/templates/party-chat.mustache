@@ -1,0 +1,190 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>FreeCruiting</title>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+    <style>
+        /* Bootstrap 유틸리티 클래스로 대체하기 어려운 최소한의 CSS만 남깁니다. */
+        #chat-window {
+            height: 400px; /* 고정 높이 */
+            overflow-y: auto; /* 스크롤바가 필요할 때만 표시 */
+        }
+    </style>
+</head>
+<body>
+<div class="container py-4">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white text-center py-3">
+            <h1 class="h4 mb-0">{{partyName}}의 채팅방</h1>
+        </div>
+        <div class="card-body">
+            <p class="text-muted text-center mb-3">
+                <span class="fw-bold">파티 ID: {{partyId}}</span> |
+                <span class="fw-bold">채팅방 ID: {{roomId}}</span>
+            </p>
+
+            <div class="input-group mb-3">
+                <span class="input-group-text">내 이름</span>
+                <input type="text" id="username" class="form-control" value="{{userName}}" readonly aria-label="사용자 이름">
+                <button id="disconnectButton" class="btn btn-danger ms-2" onclick="disconnect()" style="display: none;">채팅방 나가기</button>
+            </div>
+
+            <div id="chat-window" class="p-3 border rounded mb-3 bg-light">
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="message-input" class="form-control rounded-start" placeholder="메시지 입력..." aria-label="메시지 입력">
+                <button class="btn btn-primary rounded-end" id="sendMessageButton" onclick="sendMessage()">보내기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+
+<script>
+    let stompClient = null;
+    const currentPartyId = {{partyId}};
+        const currentRoomId = {{roomId}};
+        let username = '{{userName}}';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            connect();
+        });
+
+        async function loadPreviousMessages(roomId) {
+            try {
+
+                const response = await fetch(`/api/v1/chat/rooms/${roomId}/messages`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const messages = await response.json();
+                messages.forEach(msg => showMessage(msg));
+            } catch (error) {
+                console.error("Failed to load previous messages:", error);
+            }
+        }
+
+        function connect() {
+            if (stompClient && stompClient.connected) {
+                console.log("Already connected.");
+                return;
+            }
+
+            // 사용자 이름은 이미 백엔드에서 전달되었으므로 유효성 검사 불필요
+            // if (!username) { /* ... */ }
+
+            loadPreviousMessages(currentRoomId).then(() => {
+                const socket = new SockJS('/ws-stomp');
+                stompClient = Stomp.over(socket);
+
+                stompClient.connect({}, function (frame) {
+                    console.log('Connected: ' + frame);
+                    // document.getElementById('username').disabled = true; // readonly로 변경되었으므로 disabled 처리 불필요
+                    document.getElementById('disconnectButton').style.display = 'inline-block';
+
+                    stompClient.subscribe('/sub/chat/room/' + currentRoomId, function (message) {
+                        showMessage(JSON.parse(message.body));
+                    });
+
+                    // 입장 메시지 전송 로직 제거 (서버에서 자동으로 유저 상태를 관리할 경우)
+                    // stompClient.send("/pub/chat/message", {}, JSON.stringify({
+                    //     type: 'JOIN',
+                    //     partyId: currentPartyId,
+                    //     roomId: currentRoomId,
+                    //     sender: username
+                    // }));
+                }, function(error) {
+                    console.error("STOMP Error:", error);
+                    alert("채팅 연결에 실패했습니다. 콘솔을 확인해주세요.");
+                    // document.getElementById('username').disabled = false;
+                    document.getElementById('disconnectButton').style.display = 'none';
+                });
+            });
+        }
+
+        function disconnect() {
+            if (stompClient !== null && stompClient.connected) {
+                 // 퇴장 메시지 전송 로직 제거
+                // stompClient.send("/pub/chat/message", {}, JSON.stringify({
+                //     type: 'LEAVE',
+                //     partyId: currentPartyId,
+                //     roomId: currentRoomId,
+                //     sender: username
+                // }));
+                stompClient.disconnect();
+                console.log("Disconnected");
+                document.getElementById('chat-window').innerHTML = '';
+                // document.getElementById('username').disabled = false;
+                document.getElementById('disconnectButton').style.display = 'none';
+                stompClient = null;
+            }
+        }
+
+        function sendMessage() {
+            const messageInput = document.getElementById('message-input');
+            const messageContent = messageInput.value.trim();
+
+            if (messageContent && stompClient && stompClient.connected) {
+                const chatMessage = {
+                    // 이제 type은 항상 CHAT입니다. (JOIN/LEAVE는 클라이언트가 전송하지 않음)
+                    type: 'CHAT',
+                    partyId: currentPartyId,
+                    roomId: currentRoomId,
+                    sender: username, // userName으로 변경될 예정, 현재는 username
+                    message: messageContent
+                };
+                stompClient.send("/pub/chat/message", {}, JSON.stringify(chatMessage));
+                messageInput.value = '';
+            } else if (!stompClient || !stompClient.connected) {
+                alert("채팅방에 먼저 입장해주세요.");
+            }
+        }
+
+        function showMessage(message) {
+            const chatWindow = document.getElementById('chat-window');
+            const messageWrapper = document.createElement('div');
+            const messageContentElement = document.createElement('div');
+
+            messageWrapper.classList.add('d-flex', 'mb-2');
+
+            // 이제 클라이언트에서는 JOIN/LEAVE 메시지를 보내지 않으므로, 이 조건문은 서버에서 보낸 메시지에만 해당됩니다.
+            // 만약 서버가 여전히 JOIN/LEAVE 메시지를 보낸다면 이 로직은 유지됩니다.
+            // 하지만 사용자 이름이 userName으로 이미 주어져있다면,
+            // 별도의 "입장/퇴장" 메시지는 서버에서 생성하지 않는 것이 일반적입니다.
+            // 여기서는 서버가 "CHAT" 타입만 보낸다고 가정하고, 입장/퇴장 메시지 처리를 제거합니다.
+            // (만약 서버에서 특정 이벤트 메시지(공지 등)를 보낸다면 해당 타입을 추가하여 처리할 수 있습니다.)
+
+            // if (message.type === 'JOIN' || message.type === 'LEAVE') {
+            //     messageWrapper.classList.add('justify-content-center');
+            //     messageContentElement.classList.add('text-muted', 'fst-italic', 'text-center', 'small');
+            //     messageContentElement.textContent = message.message;
+            // } else {
+                messageContentElement.classList.add('p-2', 'rounded');
+
+                if (message.sender === username) {
+                    messageWrapper.classList.add('justify-content-end');
+                    messageContentElement.classList.add('bg-success', 'text-white');
+                    messageContentElement.innerHTML = `<b>나</b>: ${message.message}`;
+                } else {
+                    messageWrapper.classList.add('justify-content-start');
+                    messageContentElement.classList.add('bg-light', 'border');
+                    messageContentElement.innerHTML = `<b>${message.sender}</b>: ${message.message}`;
+                }
+            // } // end of else (removed JOIN/LEAVE block)
+
+            messageWrapper.appendChild(messageContentElement);
+            chatWindow.appendChild(messageWrapper);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        document.getElementById('message-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+</script>
+{{>layout/footer}}

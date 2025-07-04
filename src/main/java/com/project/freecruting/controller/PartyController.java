@@ -6,6 +6,8 @@ import com.project.freecruting.dto.comment.CommentSaveRequestDto;
 import com.project.freecruting.dto.party.PartyMemberSaveRequestDto;
 import com.project.freecruting.dto.party.PartySaveRequestDto;
 import com.project.freecruting.dto.party.PartyUpdateRequestDto;
+import com.project.freecruting.model.ChatMessage;
+import com.project.freecruting.service.ChatService;
 import com.project.freecruting.service.PartyMemberService;
 import com.project.freecruting.service.PartyService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -23,6 +26,7 @@ public class PartyController {
 
     private final PartyService partyService;
     private final PartyMemberService partyMemberService;
+    private final ChatService chatService;
 
     @Transactional
     @PostMapping("/party")
@@ -71,5 +75,11 @@ public class PartyController {
 
         return ResponseEntity.ok(Map.of("message", "파티 삭제 완료"));
         
+    }
+
+    @GetMapping("/chat/rooms/{roomId}/messages")
+    public ResponseEntity<?> getChatMessagesByRoomId(@PathVariable Long roomId) {
+        List<ChatMessage> messages = chatService.getChatMessagesByRoomId(roomId);
+        return ResponseEntity.ok(messages);
     }
 }
