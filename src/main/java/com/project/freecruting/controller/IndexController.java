@@ -196,7 +196,7 @@ public class IndexController {
     @GetMapping("/party/update/{id}")
     public String partyUpdate(@PathVariable Long id, Model model, @LoginUser SessionUser user)
     {
-        PartyResponseDto party = partyService.findByIdForOwner(id, user.getId());
+        PartyResponseDto party = partyService.findByIdForMember(id, user.getId());
         model.addAttribute("party", party);
 
         // Party Member 들을 보여줌.
@@ -221,7 +221,7 @@ public class IndexController {
 
     @GetMapping("/party/{partyId}/chat")
     public String partyChatRoom(@PathVariable Long partyId, Model model, @LoginUser SessionUser user) {
-        PartyResponseDto party = partyService.findById(partyId);
+        PartyResponseDto party = partyService.findByIdForMember(partyId, user.getId());
         model.addAttribute("partyId", party.getId());
         model.addAttribute("partyName", party.getName());
         model.addAttribute("userName", user.getName());

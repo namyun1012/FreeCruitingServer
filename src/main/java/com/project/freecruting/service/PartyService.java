@@ -89,4 +89,14 @@ public class PartyService {
 
         return new PartyResponseDto(party);
     }
+
+    @Transactional(readOnly = true)
+    public PartyResponseDto findByIdForMember(Long partyId, Long userId) {
+        Party party = partyRepository.findById(partyId).orElseThrow(() -> new NotFoundException("해당 PARTY 없음. id=" + partyId));
+
+        PartyMember partyMember = partyMemberRepository.findByPartyIdAndUserId(partyId, userId).orElseThrow(() ->
+                new ForbiddenException("해당 파티의 구성원만 접근 가능합니다"));
+
+        return new PartyResponseDto(party);
+    }
 }

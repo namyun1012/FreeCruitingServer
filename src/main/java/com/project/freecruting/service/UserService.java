@@ -21,19 +21,20 @@ public class UserService implements UserDetailsService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
+    @Transactional
     public Long save(UserSaveRequestDto dto) {
 
-        if(userRepository.findByEmail(dto.getEmail()) != null) {
+        if(userRepository.findByEmail(dto.getEmail()).isPresent()) {
             throw new InvalidStateException("이미 존재하는 Email 입니다.");
         }
 
         return userRepository.save(User.builder()
-                .email(dto.getEmail())
+                .email(dto.getEmail().toLowerCase())
                 .password(bCryptPasswordEncoder.encode(dto.getPassword()))
                 .name(dto.getName())
                 .role(Role.USER)
                 .provider("local")
-                .picture("empty") // picture 는 빈 상태로 둠
+                .picture("favicon.ico") // picture 는 빈 상태로 둠
                 .build()).getId();
     }
 
