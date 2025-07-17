@@ -75,19 +75,18 @@ public class PostService {
         Post entity = postRepository.findById(id).orElseThrow(() -> new NotFoundException("해당 게시글 없음. id=" + id));
 
         // redis 사용시
+        // 한 유저는 한 게시 물에 대해 24시간 내로 조회수 1만큼만 올릴 수 있음
         if(useRedis && user_id != null) {
             try {
-//            String key = VIEW_COUNT_KEY_PREFIX + id;
-//            redisTemplate.opsForValue().increment(key);
-            String userSetKey = VIEWED_USERS_KEY_PREFIX + id;
-            Long addedCount = redisTemplate.opsForSet().add(userSetKey, user_id.toString());
+                String userSetKey = VIEWED_USERS_KEY_PREFIX + id;
+                Long addedCount = redisTemplate.opsForSet().add(userSetKey, user_id.toString());
 
-            if (addedCount != null && addedCount > 0) {
-                String viewCountKey = VIEW_COUNT_KEY_PREFIX + id;
-                redisTemplate.opsForValue().increment(viewCountKey);
+                if (addedCount != null && addedCount > 0) {
+                    String viewCountKey = VIEW_COUNT_KEY_PREFIX + id;
+                    redisTemplate.opsForValue().increment(viewCountKey);
 
-                redisTemplate.expire(userSetKey, Duration.ofHours(24));
-            }
+                    redisTemplate.expire(userSetKey, Duration.ofHours(24));
+                }
             }
             catch (Exception e) {
                 System.out.println(e);
