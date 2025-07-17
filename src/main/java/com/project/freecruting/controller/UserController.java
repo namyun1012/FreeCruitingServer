@@ -1,11 +1,13 @@
 package com.project.freecruting.controller;
 
+import com.project.freecruting.config.auth.LoginUser;
 import com.project.freecruting.config.auth.dto.SessionUser;
 import com.project.freecruting.dto.user.UserSaveRequestDto;
 import com.project.freecruting.dto.user.UserUpdateRequestDto;
 import com.project.freecruting.model.User;
 import com.project.freecruting.service.UserService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +26,7 @@ public class UserController {
     private final HttpSession httpSession;
 
     @PostMapping("/user")
-    public ResponseEntity<?> save(@RequestBody UserSaveRequestDto requestDto) {
+    public ResponseEntity<?> save(@Valid @RequestBody UserSaveRequestDto requestDto) {
 
         Long result = userService.save(requestDto);
         return ResponseEntity
@@ -35,8 +37,8 @@ public class UserController {
     }
 
     @PutMapping("/user")
-    public ResponseEntity<?> update(@RequestBody UserUpdateRequestDto requestDto, @AuthenticationPrincipal OAuth2User oAuth2User) {
-        String email = oAuth2User.getAttribute("email");
+    public ResponseEntity<?> update(@RequestBody UserUpdateRequestDto requestDto, @LoginUser SessionUser sessionUser) {
+        String email = sessionUser.getEmail();
         User user = userService.update(requestDto, email);
 
         if (user != null) {
