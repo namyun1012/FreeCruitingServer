@@ -28,7 +28,7 @@
 | Build Tool | Gradle |
 | Security   | Spring Security + Session |
 | View       | Mustache|
-| Dev Tools  | IntelliJ, Git, Jmeter |
+| Dev Tools  | IntelliJ, Git|
 
 ---
 
