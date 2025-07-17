@@ -75,7 +75,6 @@
             }
 
             // 사용자 이름은 이미 백엔드에서 전달되었으므로 유효성 검사 불필요
-            // if (!username) { /* ... */ }
 
             loadPreviousMessages(currentRoomId).then(() => {
                 const socket = new SockJS('/ws-stomp');
