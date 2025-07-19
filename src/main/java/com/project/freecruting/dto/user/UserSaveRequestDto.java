@@ -12,11 +12,15 @@ import lombok.NoArgsConstructor;
 public class UserSaveRequestDto {
 
     @NotNull(message = "이메일 필수")
+    @Size(min = 1, message = "빈 값은 안 됩니다")
     private String email;
     
     @NotNull(message = "비밀번호 필수")
     @Size(min = 8, message = "비밀 번호 8자 이상")
     private String password;
+
+    @NotNull(message = "이름 필수")
+    @Size(min = 1, message = "빈 값은 안 됩니다")
     private String name;
 
     @Builder

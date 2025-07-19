@@ -146,7 +146,7 @@ public class PostService {
         Page<PostListResponseDto> result;
 
         if(searchType == SearchType.ALL) {
-            result = postRepository.findByTitleOrContentOrAuthor(query, query, query, pageable).map(PostListResponseDto::new);
+            result = postRepository.searchByKeyword(query, pageable).map(PostListResponseDto::new);
         }
 
         else if(searchType == SearchType.TITLE) {
@@ -163,7 +163,7 @@ public class PostService {
         
         // 이상한 값일 때  검색
         else {
-            result = postRepository.findByTitleOrContentOrAuthor(query, query, query, pageable).map(PostListResponseDto::new);
+            result = postRepository.searchByKeyword(query, pageable).map(PostListResponseDto::new);
         }
 
         return result;

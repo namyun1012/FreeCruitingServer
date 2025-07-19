@@ -20,13 +20,32 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("SELECT p FROM Post p Where p.type = :type ORDER BY p.id DESC")
     List<Post> findByType(@Param("type") Post.PostType type);
 
+    @Query(value = "SELECT * FROM post p WHERE p.title LIKE %:title%",
+            countQuery = "SELECT count(*) FROM post p WHERE p.title LIKE %:title%",
+            nativeQuery = true)
+    Page<Post> findByTitle(@Param("title") String title, Pageable pageable);
 
-    Page<Post> findByTitle(String title, Pageable pageable);
-    Page<Post> findByContent(String content, Pageable pageable);
 
-    Page<Post> findByAuthor(String author, Pageable pageable);
+    @Query(value = "SELECT * FROM post p WHERE p.content LIKE %:content%",
+            countQuery = "SELECT count(*) FROM post p WHERE p.content LIKE %:content%",
+            nativeQuery = true)
+    Page<Post> findByContent(@Param("content") String content, Pageable pageable);
 
-    Page<Post> findByTitleOrContentOrAuthor(String title, String content, String author, Pageable pageable);
+    @Query(value = "SELECT * FROM post p WHERE p.author LIKE %:author%",
+            countQuery = "SELECT count(*) FROM post p WHERE p.author LIKE %:author%",
+            nativeQuery = true)
+    Page<Post> findByAuthor(@Param("author") String author, Pageable pageable);
+
+    @Query(value = "SELECT * FROM post p WHERE " +
+            "p.title LIKE %:keyword% OR " +
+            "p.content LIKE %:keyword% OR " +
+            "p.author LIKE %:keyword%",
+            countQuery = "SELECT count(*) FROM post p WHERE " +
+                    "p.title LIKE %:keyword% OR " +
+                    "p.content LIKE %:keyword% OR " +
+                    "p.author LIKE %:keyword%",
+            nativeQuery = true)
+    Page<Post> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
     // Page 처리
     Page<Post> findAll(Pageable pageable);
