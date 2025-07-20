@@ -16,12 +16,14 @@
                 <input type="text" class="form-control" id="name" value="{{userName}}">
             </div>
             <div class="form-group">
-                <label for="title">Email</label>
+                <label for="email">Email</label>
                 <input type="text" class="form-control" id="email" value="{{userEmail}}" readonly>
             </div>
             <div class="form-group">
-                <label for="author">Picture</label>
-                <img src="{{userPicture}}" width="500" height="300" id="picture">
+                <label for="picture">Picture</label>
+                <img src="{{userPicture}}" width="300" height="200" id="currentPicture" class="img-thumbnail d-block mb-2">
+                <input type="file" class="form-control-file" id="newPictureFile" accept="image/*">
+                <small class="form-text text-muted">새로운 이미지를 선택하세요. (JPG, PNG, GIF 등)</small>
             </div>
         </form>
         <a href="/" role="button" class="btn btn-secondary">Cancel</a>

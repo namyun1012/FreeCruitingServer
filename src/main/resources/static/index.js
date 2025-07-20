@@ -101,22 +101,38 @@ var main = {
     },
 
     updateUser : function () {
-        var data = {
-            name: $('#name').val(),
-            picture: $('#picture').val(),
-        };
+        var userName = $('#name').val();
+        var newPictureFile = $('#newPictureFile')[0].files[0];
+
+        var formData = new FormData();
+
+        formData.append('name', userName);
+
+        // 새 이미지 선정 시에만 FormData 에 추가
+        if (newPictureFile) {
+            formData.append('file', newPictureFile);
+        }
 
         $.ajax({
             type: 'PUT',
             url: '/api/v1/user',
-            dataType: 'json',
-            contentType:'application/json; charset=utf-8',
-            data: JSON.stringify(data)
+            processData: false,
+            contentType: false,
+            data: formData
         }).done(function(response) {
             alert(response.message);
             window.location.href = '/';
-        }).fail(function (error) {
-            alert(JSON.stringify(error));
+        }).fail(function (xhr, status, error) {
+            var errorMessage = xhr.responseText || '업데이트 실패: 알 수 없는 오류';
+            try {
+                // 서버에서 JSON 응답을 보낼 경우 파싱 시도
+                var errorJson = JSON.parse(errorMessage);
+                errorMessage = errorJson.message || errorMessage;
+            } catch (e) {
+                // JSON 파싱 실패 시 원본 텍스트 사용
+            }
+            alert('업데이트 실패: ' + errorMessage);
+            console.error("AJAX Error:", status, error, xhr.responseText);
         });
     },
 };

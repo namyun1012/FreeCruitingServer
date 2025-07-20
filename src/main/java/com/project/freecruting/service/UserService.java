@@ -14,10 +14,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+
 @RequiredArgsConstructor
 @Service
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
+    private final FileService fileService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
@@ -42,7 +45,30 @@ public class UserService implements UserDetailsService {
     public User update(UserUpdateRequestDto requestDto, String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("해당 유저 없음"));
 
-        user.update(requestDto.getName(), requestDto.getPicture());
+        String oldPictureFileName = user.getPicture();
+
+        if (requestDto.getPicture() != null && !requestDto.getPicture().isEmpty()) {
+            user.update(requestDto.getName(), requestDto.getPicture());
+
+
+            if (oldPictureFileName != null && !oldPictureFileName.isEmpty()) {
+                try {
+                    fileService.deleteFile(oldPictureFileName);
+                    System.out.println("기존 이미지 파일 삭제 성공");
+                }
+                catch (IOException e) {
+                    System.err.println("기존 이미지 파일 삭제 실패");
+                }
+            }
+
+        }
+
+        else {
+            user.update(requestDto.getName(), oldPictureFileName);
+        }
+
+
+
         return user;
     }
 
