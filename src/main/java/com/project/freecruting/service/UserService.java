@@ -7,6 +7,8 @@ import com.project.freecruting.exception.NotFoundException;
 import com.project.freecruting.model.type.Role;
 import com.project.freecruting.model.User;
 import com.project.freecruting.repository.UserRepository;
+import com.project.freecruting.service.storage.FileService;
+import com.project.freecruting.service.storage.LocalFileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

@@ -1,8 +1,10 @@
-package com.project.freecruting.service;
+package com.project.freecruting.service.storage;
 
 import com.project.freecruting.exception.InvalidStateException;
 import com.project.freecruting.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,7 +19,9 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Service
-public class FileService {
+@Primary
+@ConditionalOnProperty(name = "file.storage.type", havingValue = "local", matchIfMissing = true)
+public class LocalFileService implements FileService{
 
     @Value("${file.upload-dir}")
     private String uploadDir;
@@ -28,7 +32,7 @@ public class FileService {
             "image/jpeg", "image/png", "image/gif", "image/bmp", "image/webp"
     );
 
-    public String uploadImageFile(MultipartFile file) throws IOException {
+    public String uploadFile(MultipartFile file) throws IOException {
         if(file.isEmpty()) {
             throw new NotFoundException("업로드 할 파일이 비었습니다.");
         }

@@ -1,7 +1,8 @@
 package com.project.freecruting.controller;
 
 import com.project.freecruting.exception.NotFoundException;
-import com.project.freecruting.service.FileService;
+import com.project.freecruting.service.storage.FileService;
+import com.project.freecruting.service.storage.LocalFileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -29,7 +30,7 @@ public class FileController {
     @PostMapping("/upload")
     public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
         try {
-            String fileName = fileService.uploadImageFile(file);
+            String fileName = fileService.uploadFile(file);
             String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                     .path("/api/v1/upload/files")
                     .path(fileName)

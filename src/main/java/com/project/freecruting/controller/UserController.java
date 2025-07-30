@@ -5,7 +5,8 @@ import com.project.freecruting.config.auth.dto.SessionUser;
 import com.project.freecruting.dto.user.UserSaveRequestDto;
 import com.project.freecruting.dto.user.UserUpdateRequestDto;
 import com.project.freecruting.model.User;
-import com.project.freecruting.service.FileService;
+import com.project.freecruting.service.storage.FileService;
+import com.project.freecruting.service.storage.LocalFileService;
 import com.project.freecruting.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -51,7 +52,7 @@ public class UserController {
         try {
             // 새 이미지 업로드 되었음
             if (file != null && !file.isEmpty()) {
-                newPictureFileName = "/api/v1/files/" + fileService.uploadImageFile(file);
+                newPictureFileName = "/api/v1/files/" + fileService.uploadFile(file);
             }
 
             UserUpdateRequestDto requestDto = UserUpdateRequestDto.builder()
