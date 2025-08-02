@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -44,10 +45,26 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public User update(UserUpdateRequestDto requestDto, String email) {
+    public User update(String name, MultipartFile file, String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("해당 유저 없음"));
 
+        String pictureUrl = null;
         String oldPictureFileName = user.getPicture();
+
+        // User Profile Image 는 내부 저장소 뿐만 아닌 외부 저장소도 가능함.
+        if (file != null && !file.isEmpty()) {
+            try {
+                pictureUrl = "/api/v1/files/" + fileService.uploadFile(file);
+            }
+            catch (IOException e) {
+                System.out.println("Failed in File Upload");
+            }
+        }
+
+        UserUpdateRequestDto requestDto = UserUpdateRequestDto.builder()
+                .name(name)
+                .picture(pictureUrl)
+                .build();
 
         if (requestDto.getPicture() != null && !requestDto.getPicture().isEmpty()) {
             user.update(requestDto.getName(), requestDto.getPicture());

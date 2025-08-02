@@ -9,5 +9,5 @@ public interface FileService {
 
     String uploadFile(MultipartFile file) throws IOException;
     void deleteFile(String fileName) throws IOException;
-    Path getFilePath(String fileName);
+    Path getFilePath(String fileName) throws IOException;
 }

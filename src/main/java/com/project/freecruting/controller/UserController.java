@@ -26,7 +26,6 @@ public class UserController {
 
     private final UserService userService;
     private final HttpSession httpSession;
-    private final FileService fileService;
 
 
     @PostMapping("/user")
@@ -48,31 +47,16 @@ public class UserController {
 
 
         String email = sessionUser.getEmail();
-        String newPictureFileName = null;
-        try {
-            // 새 이미지 업로드 되었음
-            if (file != null && !file.isEmpty()) {
-                newPictureFileName = "/api/v1/files/" + fileService.uploadFile(file);
-            }
 
-            UserUpdateRequestDto requestDto = UserUpdateRequestDto.builder()
-                    .name(name)
-                    .picture(newPictureFileName)
-                    .build();
-            User user = userService.update(requestDto, email);
+        User user = userService.update(name, file, email);
 
-            if (user != null) {
-                // Session Update 적용해 주어야 한다.
-                httpSession.setAttribute("user", new SessionUser(user));
-                return ResponseEntity.ok(Map.of("message", "Update successful"));
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "User update 실패."));
-            }
-
+        if (user != null) {
+            // Session Update 적용해 주어야 한다.
+            httpSession.setAttribute("user", new SessionUser(user));
+            return ResponseEntity.ok(Map.of("message", "Update successful"));
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "User update 실패."));
         }
 
-        catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "서버 오류: " + e.getMessage()));
-        }
     }
 }

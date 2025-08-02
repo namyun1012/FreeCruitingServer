@@ -26,7 +26,8 @@ public class ChatService {
         }
 
         ChatMessage savedMessage = chatMessageRepository.save(chatMessage);
-
+        
+        // WebSocketConfig 에서 확인
         messagingTemplate.convertAndSend("/sub/chat/room/" + savedMessage.getRoomId(), savedMessage);
 
         return savedMessage;
