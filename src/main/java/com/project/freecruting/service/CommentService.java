@@ -18,7 +18,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -77,4 +79,21 @@ public class CommentService {
         commentRepository.delete(comment);
         return id;
     }
+
+    // Support 함수
+    @Transactional(readOnly = true)
+    public Map<Long, Long> getCommentCountsByPostIds(List<Long> postIds) {
+        if (postIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        List<Object[]> results = commentRepository.findCommentCountsByPostIds(postIds);
+        return results.stream()
+                .collect(Collectors.toMap(
+                        result -> (Long) result[0],  // postId
+                        result -> (Long) result[1],  // commentCount
+                        (existing, replacement) -> existing
+                ));
+    }
+
 }

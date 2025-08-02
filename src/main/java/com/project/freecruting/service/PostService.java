@@ -9,6 +9,7 @@ import com.project.freecruting.exception.NotFoundException;
 import com.project.freecruting.model.Post;
 import com.project.freecruting.model.User;
 import com.project.freecruting.model.type.SearchType;
+import com.project.freecruting.repository.CommentRepository;
 import com.project.freecruting.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -30,6 +32,7 @@ import java.util.stream.Collectors;
 @Service
 public class PostService {
     private final PostRepository postRepository;
+    private final CommentService commentService;
     private final RedisTemplate<String, String> redisTemplate;
 
     @Value("${app.use-redis-for-views:false}")
@@ -126,8 +129,15 @@ public class PostService {
     public Page<PostListResponseDto> findAllPage(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
 
-        return postRepository.findAllByOrderByIdDesc(pageable)
-                .map(PostListResponseDto::new);
+        Page<Post> posts = postRepository.findAllByOrderByIdDesc(pageable);
+
+        List<Long> postIds = posts.getContent().stream()
+                .map(Post::getId)
+                .collect(Collectors.toList());
+
+        Map<Long, Long> commentCounts = commentService.getCommentCountsByPostIds(postIds);
+
+        return posts.map(post -> new PostListResponseDto(post, commentCounts.get(post.getId())));
     }
 
     @Transactional(readOnly = true)
@@ -223,4 +233,7 @@ public class PostService {
         }
         System.out.println("Redis to DB view sync finished.");
     }
+
+    // 댓글 개수 서포트
+
 }

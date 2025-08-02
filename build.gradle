@@ -49,6 +49,9 @@ dependencies {
 	implementation 'software.amazon.awssdk:auth:2.20.26'
 
 	// APM
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'io.micrometer:micrometer-core'
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
 
 	compileOnly 'org.projectlombok:lombok'
 	// runtimeOnly 'com.h2database:h2'
