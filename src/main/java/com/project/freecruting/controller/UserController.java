@@ -28,7 +28,7 @@ public class UserController {
     private final HttpSession httpSession;
 
 
-    @PostMapping("/user")
+    @PostMapping("/users")
     public ResponseEntity<?> save(@Valid @RequestBody UserSaveRequestDto requestDto) {
 
         Long result = userService.save(requestDto);
@@ -39,7 +39,7 @@ public class UserController {
 
     }
 
-    @PutMapping("/user")
+    @PutMapping("/users")
     public ResponseEntity<?> update(
             @RequestParam("name") String name,
             @RequestParam(value = "file", required = false) MultipartFile file,

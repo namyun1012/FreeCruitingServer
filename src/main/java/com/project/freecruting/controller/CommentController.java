@@ -26,7 +26,7 @@ public class CommentController {
     private final CommentService commentService;
 
     // Save 용도
-    @PostMapping("/comment")
+    @PostMapping("/comments")
     public ResponseEntity<?> save(@RequestBody CommentSaveRequestDto requestDto, @LoginUser SessionUser user) {
         // requestDto 에서 User ID 는 Controller 에서 Setting 을 해주기.
         Long result = commentService.save(requestDto, user.getId());
@@ -38,7 +38,7 @@ public class CommentController {
         return ResponseEntity.ok(Map.of("message", "댓글 입력 완료"));
     }
 
-    @PutMapping("/comment/{id}")
+    @PutMapping("/comments/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody CommentUpdateRequestDto requestDto, @LoginUser SessionUser user) {
         Long author_id = user.getId();
         Long result = commentService.update(id, requestDto, author_id);
@@ -50,7 +50,7 @@ public class CommentController {
         return ResponseEntity.ok(Map.of("message", "Update successful"));
     }
 
-    @DeleteMapping("/comment/{id}")
+    @DeleteMapping("/comments/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id, @LoginUser SessionUser user) {
         Long author_id = user.getId();
         Long result = commentService.delete(id, author_id);
@@ -64,7 +64,7 @@ public class CommentController {
     
     
     // Page API 는 추가해 놓음
-    @GetMapping("/posts/page/{post_id}")
+    @GetMapping("/comments/{post_id}")
     public ResponseEntity<Page<CommentListResponseDto>> getAllPostsPage (
             @PathVariable Long post_id,
             @RequestParam(defaultValue = "0") int page,

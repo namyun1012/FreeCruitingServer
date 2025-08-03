@@ -22,7 +22,7 @@ public class PartyJoinRequestController {
     private final PartyMemberService partyMemberService;
 
     @Transactional
-    @PostMapping("/party_join_request")
+    @PostMapping("/party_join_requests")
     public ResponseEntity<?> save(@RequestBody PartyJoinRequestSaveRequestDto requestDto, @LoginUser SessionUser user) {
         // requestDto 에서 User ID 는 Controller 에서 Setting 을 해주기.
         Long user_id = user.getId();
@@ -38,7 +38,7 @@ public class PartyJoinRequestController {
     }
 
     @Transactional
-    @PostMapping("/party_join_request/{request_id}/approve")
+    @PostMapping("/party_join_requests/{request_id}/approve")
     public ResponseEntity<?> approve(@PathVariable Long request_id, @LoginUser SessionUser user) {
 
         Long user_id = user.getId();
@@ -50,7 +50,7 @@ public class PartyJoinRequestController {
     }
 
     @Transactional
-    @PostMapping("/party_join_request/{request_id}/reject")
+    @PostMapping("/party_join_requests/{request_id}/reject")
     public ResponseEntity<?> reject(@PathVariable Long request_id, @LoginUser SessionUser user) {
 
         Long user_id = user.getId();

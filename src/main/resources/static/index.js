@@ -42,7 +42,7 @@ var main = {
 
         $.ajax({
             type: 'POST',
-            url: '/api/v1/post',
+            url: '/api/v1/posts',
             dataType: 'json',
             contentType:'application/json; charset=utf-8',
             data: JSON.stringify(data)
@@ -65,7 +65,7 @@ var main = {
 
         $.ajax({
             type: 'PUT',
-            url: '/api/v1/post/'+id,
+            url: '/api/v1/posts/'+id,
             dataType: 'json',
             contentType:'application/json; charset=utf-8',
             data: JSON.stringify(data)
@@ -85,7 +85,7 @@ var main = {
 
         $.ajax({
             type: 'DELETE',
-            url: '/api/v1/post/'+id,
+            url: '/api/v1/posts/'+id,
             dataType: 'json',
             contentType:'application/json; charset=utf-8'
         }).done(function(response) {
@@ -115,7 +115,7 @@ var main = {
 
         $.ajax({
             type: 'PUT',
-            url: '/api/v1/user',
+            url: '/api/v1/users',
             processData: false,
             contentType: false,
             data: formData
@@ -147,7 +147,7 @@ function saveUser() {
 
         $.ajax({
             type: 'POST',
-            url: '/api/v1/user',
+            url: '/api/v1/users',
             dataType: 'json',
             contentType:'application/json; charset=utf-8',
             data: JSON.stringify(data)
@@ -169,7 +169,7 @@ function saveComment(post_id) {
 
         $.ajax({
             type: 'POST',
-            url: '/api/v1/comment',
+            url: '/api/v1/comments',
             dataType: 'json',
             contentType:'application/json; charset=utf-8',
             data: JSON.stringify(data)
@@ -191,7 +191,7 @@ function updateComment() {
 
         $.ajax({
             type: 'PUT',
-            url: '/api/v1/comment/' + comment_id,
+            url: '/api/v1/comments/' + comment_id,
             dataType: 'json',
             contentType:'application/json; charset=utf-8',
             data: JSON.stringify(data)
@@ -210,7 +210,7 @@ function deleteComment(comment_id) {
 
     $.ajax({
         type: 'DELETE',
-        url: '/api/v1/comment/' + comment_id, // 댓글 ID를 URL에 추가
+        url: '/api/v1/comments/' + comment_id, // 댓글 ID를 URL에 추가
         dataType: 'json',
         contentType: 'application/json; charset=utf-8'
     }).done(function() {
@@ -231,7 +231,7 @@ function saveParty() {
 
         $.ajax({
             type: 'POST',
-            url: '/api/v1/party',
+            url: '/api/v1/partys',
             dataType: 'json',
             contentType:'application/json; charset=utf-8',
             data: JSON.stringify(data)
@@ -254,7 +254,7 @@ function updateParty() {
 
         $.ajax({
             type: 'PUT',
-            url: '/api/v1/party/' + party_id,
+            url: '/api/v1/partys/' + party_id,
             dataType: 'json',
             contentType:'application/json; charset=utf-8',
             data: JSON.stringify(data)
@@ -271,7 +271,7 @@ function deleteParty() {
 
         $.ajax({
             type: 'DELETE',
-            url: '/api/v1/party/' + party_id,
+            url: '/api/v1/partys/' + party_id,
             dataType: 'json',
             contentType:'application/json; charset=utf-8'
         }).done(function() {
@@ -290,7 +290,7 @@ function savePartyMember(party_id) {
 
         $.ajax({
             type: 'POST',
-            url: '/api/v1/partymember',
+            url: '/api/v1/partymembers',
             dataType: 'json',
             contentType:'application/json; charset=utf-8',
             data: JSON.stringify(data)
@@ -308,7 +308,7 @@ function updatePartyMember() {
 
         $.ajax({
             type: 'PUT',
-            url: '/api/v1/partymember',
+            url: '/api/v1/partymembers',
             dataType: 'json',
             contentType:'application/json; charset=utf-8',
             data: JSON.stringify(data)
@@ -324,7 +324,7 @@ function deletePartyMember(partymember_id, party_id) {
 
         $.ajax({
             type: 'DELETE',
-            url: '/api/v1/partymember/' + partymember_id,
+            url: '/api/v1/partymembers/' + partymember_id,
             dataType: 'json',
             contentType:'application/json; charset=utf-8'
         }).done(function() {
@@ -345,7 +345,7 @@ function savePartyJoinRequest(party_id) {
 
         $.ajax({
             type: 'POST',
-            url: '/api/v1/party_join_request',
+            url: '/api/v1/party_join_requests',
             dataType: 'json',
             contentType:'application/json; charset=utf-8',
             data: JSON.stringify(data)
@@ -361,7 +361,7 @@ function approvePartyJoinRequest(id ,party_id) {
 
         $.ajax({
             type: 'POST',
-            url: '/api/v1/party_join_request/' + id + '/approve',
+            url: '/api/v1/party_join_requests/' + id + '/approve',
             dataType: 'json',
             contentType:'application/json; charset=utf-8',
         }).done(function() {
@@ -377,7 +377,7 @@ function rejectPartyJoinRequest(id ,party_id) {
 
         $.ajax({
             type: 'POST',
-            url: '/api/v1/party_join_request/' + id + '/reject',
+            url: '/api/v1/party_join_requests/' + id + '/reject',
             dataType: 'json',
             contentType:'application/json; charset=utf-8',
         }).done(function() {

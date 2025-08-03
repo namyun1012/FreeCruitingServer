@@ -24,13 +24,13 @@ public class PostController {
 
     private final PostService postService;
     // Save 용도
-    @PostMapping("/post")
+    @PostMapping("/posts")
     public Long save(@RequestBody PostSaveRequestDto requestDto, @LoginUser SessionUser user) {
         Long author_id = user.getId();
         return postService.save(requestDto, author_id);
     }
 
-    @PutMapping("/post/{id}")
+    @PutMapping("/posts/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody PostUpdateRequestDto requestDto, @LoginUser SessionUser user) {
         // String author_id = oAuth2User.getAttribute("sub");
         // author_id 저장하는 것으로 바꾸기
@@ -44,7 +44,7 @@ public class PostController {
         return ResponseEntity.ok(Map.of("message", "Update successful"));
     }
 
-    @GetMapping("/post/{id}")
+    @GetMapping("/posts/{id}")
     public PostResponseDto findById(@PathVariable Long id, @LoginUser SessionUser user) {
 
         if(user == null) {
@@ -54,7 +54,7 @@ public class PostController {
         return postService.findById(id, user.getId());
     }
 
-    @DeleteMapping("/post/{id}")
+    @DeleteMapping("/posts/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id, @LoginUser SessionUser user) {
         Long author_id = user.getId();
         Long result = postService.delete(id, author_id);
@@ -64,42 +64,28 @@ public class PostController {
         }
         return ResponseEntity.ok(Map.of("message", "Delete successful"));
     }
-    
-    // 전체 Post 받아오기
-    @GetMapping("/posts")
-    public List<PostListResponseDto> getAllPosts() {
-        return postService.findAllDesc();
-    }
 
     // type 별 Post 받아오기, 아직 미 사용 중 추후에 에러 체크할 것
-    @GetMapping("/posts/type")
+    @GetMapping("/posts")
     public ResponseEntity<Page<PostListResponseDto>> getPostsByType(
-            @RequestParam String type,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Page<PostListResponseDto> postPages = postService.findByType(type, page, size);
-
-        return ResponseEntity.ok(postPages);
-    }
-    
-    // Post 검색 결과
-    @GetMapping("/posts/search/{type}/{query}")
-    public ResponseEntity<Page<PostListResponseDto>> search(@PathVariable String query, @PathVariable String type,
-                                            @RequestParam(defaultValue = "0") int page,
-                                            @RequestParam(defaultValue = "10") int size) {
-        SearchType searchType = SearchType.fromString(type);
-
-        Page<PostListResponseDto> postPages = postService.search(query, searchType, page, size);
-        return ResponseEntity.ok(postPages);
-    }
-
-    // Page 사용,
-    @GetMapping("/posts/page")
-    public ResponseEntity<Page<PostListResponseDto>> getAllPostsPage (
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false) String search_type,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        Page<PostListResponseDto> postPages = postService.findAllPage(page, size);
+        Page<PostListResponseDto> postPages;
+        if (query != null && search_type != null)  {
+            SearchType searchType = SearchType.fromString(search_type);
+            postPages = postService.search(query, searchType, page, size);
+        }
+        else if (type != null) {
+            postPages = postService.findByType(type, page, size);
+        }
+        else {
+            postPages = postService.findAllPage(page, size);
+        }
+
         return ResponseEntity.ok(postPages);
     }
 }

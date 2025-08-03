@@ -24,7 +24,7 @@ public class PartyMemberController {
 
     // 추후에는 Party Owner 의 승인이 이루어져야 이 API 가 호출되도록 바꿀 필요 있음
     @Transactional
-    @PostMapping("/partymember")
+    @PostMapping("/partymembers")
     public ResponseEntity<?> save(@RequestBody PartyMemberSaveRequestDto requestDto, @LoginUser SessionUser user) {
         // requestDto 에서 User ID 는 Controller 에서 Setting 을 해주기.
         Long user_id = user.getId();
@@ -39,7 +39,7 @@ public class PartyMemberController {
     }
 
     @Transactional
-    @PutMapping("/partymember/{id}")
+    @PutMapping("/partymembers/{id}")
     public ResponseEntity<?> update(@PathVariable Long id , @RequestBody PartyMemberUpdateRequestDto requestDto, @LoginUser SessionUser user) {
         Long user_id = user.getId();
         Long result_id = partyMemberService.update(id, requestDto, user_id);
@@ -52,7 +52,7 @@ public class PartyMemberController {
     }
 
     @Transactional
-    @DeleteMapping("partymember/{id}")
+    @DeleteMapping("partymembers/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id, @LoginUser SessionUser user) {
         Long user_id = user.getId();
         Long result_id = partyMemberService.delete(id, user_id);
