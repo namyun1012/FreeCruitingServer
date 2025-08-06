@@ -19,7 +19,6 @@ import java.util.Map;
 @RequestMapping("/api/v1")
 public class PartyJoinRequestController {
     private final PartyJoinRequestService partyJoinRequestService;
-    private final PartyMemberService partyMemberService;
 
     @Transactional
     @PostMapping("/party_join_requests")

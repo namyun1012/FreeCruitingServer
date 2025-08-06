@@ -31,9 +31,6 @@ public class PartyMemberController {
 
         // Party Member 를 생성하는 과정
         Long result_id = partyMemberService.save(requestDto, user_id);
-        if(result_id == 0L) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "파티 멤버 생성 실패"));
-        }
         
         return ResponseEntity.ok(Map.of("message", "파티 멤버 가입 완료"));
     }
@@ -44,10 +41,6 @@ public class PartyMemberController {
         Long user_id = user.getId();
         Long result_id = partyMemberService.update(id, requestDto, user_id);
 
-        if(result_id == 0L) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "파티 멤버 수정 실패"));
-        }
-
         return ResponseEntity.ok(Map.of("message", "파티 멤버 수정 완료"));
     }
 
@@ -57,9 +50,6 @@ public class PartyMemberController {
         Long user_id = user.getId();
         Long result_id = partyMemberService.delete(id, user_id);
 
-        if(result_id == 0L) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "파티 멤버 삭제 실패"));
-        }
 
         return ResponseEntity.ok(Map.of("message", "파티 멤버 삭제 완료"));
     }

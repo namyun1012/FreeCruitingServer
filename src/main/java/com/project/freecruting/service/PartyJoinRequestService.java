@@ -83,7 +83,7 @@ public class PartyJoinRequestService {
         partyJoinRequestRepository.setStatus(request_id, RequestStatus.APPROVED);
         // Party Member 생성할 때 partyMember service 호출 안하고 그대로 생성?
         partyMemberRepository.save(
-                new PartyMemberSaveRequestDto(request.getParty_role(), request.getParty().getId()).toEntity(party, request.getUser()));
+                new PartyMemberSaveRequestDto(request.getParty_role()).toEntity(party, request.getUser()));
     }
 
     @Transactional

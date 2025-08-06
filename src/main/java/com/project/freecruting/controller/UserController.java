@@ -49,7 +49,8 @@ public class UserController {
         String email = sessionUser.getEmail();
 
         User user = userService.update(name, file, email);
-
+        
+        // 얘는 Session 관련이라 추후 고민
         if (user != null) {
             // Session Update 적용해 주어야 한다.
             httpSession.setAttribute("user", new SessionUser(user));

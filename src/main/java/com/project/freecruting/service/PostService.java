@@ -115,7 +115,25 @@ public class PostService {
         return new PostResponseDto(post);
 
     }
+    
+    // post pages 반환 함수
+    // 일종의 Facade
+    public Page<PostListResponseDto> findPostPages(String type, String query, String search_type, int page, int size) {
+        Page<PostListResponseDto> postPages;
 
+        if (query != null && search_type != null)  {
+            SearchType searchType = SearchType.fromString(search_type);
+            postPages = search(query, searchType, page, size);
+        }
+        else if (type != null) {
+            postPages = findByType(type, page, size);
+        }
+        else {
+            postPages = findAllPage(page, size);
+        }
+
+        return postPages;
+    }
 
 
     @Transactional(readOnly = true)

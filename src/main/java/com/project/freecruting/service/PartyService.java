@@ -7,12 +7,10 @@ import com.project.freecruting.dto.post.PostResponseDto;
 import com.project.freecruting.dto.post.PostSaveRequestDto;
 import com.project.freecruting.exception.ForbiddenException;
 import com.project.freecruting.exception.NotFoundException;
-import com.project.freecruting.model.Comment;
-import com.project.freecruting.model.Party;
-import com.project.freecruting.model.PartyMember;
-import com.project.freecruting.model.Post;
+import com.project.freecruting.model.*;
 import com.project.freecruting.repository.PartyMemberRepository;
 import com.project.freecruting.repository.PartyRepository;
+import com.project.freecruting.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,12 +27,18 @@ import java.util.stream.Collectors;
 public class PartyService {
     private final PartyRepository partyRepository;
     private final PartyMemberRepository partyMemberRepository;
-
-    // Party 생성 시 자기 자신을 Party Member 로 추가
+    private final UserRepository userRepository;
+    // Party 생성 시 무조건 자기 자신을 Party Member 로 추가
     @Transactional
-    public Long save(PartySaveRequestDto requestDto) {
+    public Long save(PartySaveRequestDto requestDto, Long user_id) {
+        requestDto.setOwner_id(user_id);
         Party party = partyRepository.save(requestDto.toEntity());
+        User user = userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("해당 USER 없음. id=" + user_id));;
         // party Member 자기 자신 추가는 Controller 에서 각각 호출하는 것으로
+        // 자기 자신을 owner 로 party member 로 추가하는 단계
+        PartyMemberSaveRequestDto partyMemberSaveRequestDto = new PartyMemberSaveRequestDto("owner");
+        partyMemberRepository.save(partyMemberSaveRequestDto.toEntity(party, user));
+
         return party.getId();
     }
 

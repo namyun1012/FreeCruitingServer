@@ -37,10 +37,6 @@ public class PostController {
         Long author_id = user.getId();
         Long result = postService.update(id, requestDto, author_id);
 
-        if(result == 0L) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "작성자만 수정할 수 있습니다."));
-        }
-
         return ResponseEntity.ok(Map.of("message", "Update successful"));
     }
 
@@ -59,13 +55,11 @@ public class PostController {
         Long author_id = user.getId();
         Long result = postService.delete(id, author_id);
 
-        if(result == 0L) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "작성자만 삭제할 수 있습니다."));
-        }
         return ResponseEntity.ok(Map.of("message", "Delete successful"));
     }
 
     // type 별 Post 받아오기, 아직 미 사용 중 추후에 에러 체크할 것
+    // 추후에 Service 로 좀 내리기?
     @GetMapping("/posts")
     public ResponseEntity<Page<PostListResponseDto>> getPostsByType(
             @RequestParam(required = false) String type,
@@ -74,18 +68,7 @@ public class PostController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        Page<PostListResponseDto> postPages;
-        if (query != null && search_type != null)  {
-            SearchType searchType = SearchType.fromString(search_type);
-            postPages = postService.search(query, searchType, page, size);
-        }
-        else if (type != null) {
-            postPages = postService.findByType(type, page, size);
-        }
-        else {
-            postPages = postService.findAllPage(page, size);
-        }
-
+        Page<PostListResponseDto> postPages = postService.findPostPages(type, query, search_type, page, size);
         return ResponseEntity.ok(postPages);
     }
 }

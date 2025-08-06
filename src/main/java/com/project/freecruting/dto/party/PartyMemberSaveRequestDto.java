@@ -8,8 +8,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class PartyMemberSaveRequestDto {
-    private Long party_id;
     private String party_role;
+    private Long party_id;
+    @Builder
+    public PartyMemberSaveRequestDto(String party_role) {
+        this.party_role = party_role;
+    }
+
     @Builder
     public PartyMemberSaveRequestDto(String party_role, Long party_id) {
         this.party_role = party_role;
