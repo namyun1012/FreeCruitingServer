@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
 @Service
 public class PostService {
     private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
     private final CommentService commentService;
     private final RedisTemplate<String, String> redisTemplate;
 
@@ -153,7 +155,7 @@ public class PostService {
                 .map(Post::getId)
                 .collect(Collectors.toList());
 
-        Map<Long, Long> commentCounts = commentService.getCommentCountsByPostIds(postIds);
+        Map<Long, Long> commentCounts = getCommentCountsByPostIds(postIds);
 
         return posts.map(post -> new PostListResponseDto(post, commentCounts.get(post.getId())));
     }
@@ -163,9 +165,15 @@ public class PostService {
         Post.PostType postType = Post.PostType.fromString(type);
         Pageable pageable = PageRequest.of(page, size);
 
+        Page<Post> posts = postRepository.findByTypeOrderByIdDesc(pageable, postType);
 
-        return postRepository.findByTypeOrderByIdDesc(pageable, postType)
-                .map(PostListResponseDto:: new);
+        List<Long> postIds = posts.getContent().stream()
+                .map(Post::getId)
+                .collect(Collectors.toList());
+
+        Map<Long, Long> commentCounts = getCommentCountsByPostIds(postIds);
+
+        return posts.map(post -> new PostListResponseDto(post, commentCounts.get(post.getId())));
     }
 
     @Transactional(readOnly = true)
@@ -173,28 +181,36 @@ public class PostService {
         Pageable pageable = PageRequest.of(page, size);
         Page<PostListResponseDto> result;
 
+        Page<Post> posts;
+
         if(searchType == SearchType.ALL) {
-            result = postRepository.searchByKeyword(query, pageable).map(PostListResponseDto::new);
+            posts = postRepository.searchByKeyword(query, pageable);
         }
 
         else if(searchType == SearchType.TITLE) {
-            result = postRepository.findByTitle(query, pageable).map(PostListResponseDto::new);
+            posts = postRepository.findByTitle(query, pageable);
         }
 
         else if(searchType == SearchType.CONTENT) {
-            result = postRepository.findByContent(query, pageable).map(PostListResponseDto::new);
+            posts = postRepository.findByContent(query, pageable);
         }
 
         else if(searchType == SearchType.AUTHOR) {
-            result = postRepository.findByAuthor(query, pageable).map(PostListResponseDto::new);
+            posts = postRepository.findByAuthor(query, pageable);
         }
         
         // 이상한 값일 때  검색
         else {
-            result = postRepository.searchByKeyword(query, pageable).map(PostListResponseDto::new);
+            posts = postRepository.searchByKeyword(query, pageable);
         }
 
-        return result;
+        List<Long> postIds = posts.getContent().stream()
+                .map(Post::getId)
+                .collect(Collectors.toList());
+
+        Map<Long, Long> commentCounts = getCommentCountsByPostIds(postIds);
+
+        return posts.map(post -> new PostListResponseDto(post, commentCounts.get(post.getId())));
     }
 
     // Support Function
@@ -252,6 +268,19 @@ public class PostService {
         System.out.println("Redis to DB view sync finished.");
     }
 
-    // 댓글 개수 서포트
+    // 댓글 개수 서포트 (솔직히 Comment Service 쪽에 있는 게 맞긴 한 듯하다.)
+    @Transactional(readOnly = true)
+    public Map<Long, Long> getCommentCountsByPostIds(List<Long> postIds) {
+        if (postIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
 
+        List<Object[]> results = commentRepository.findCommentCountsByPostIds(postIds);
+        return results.stream()
+                .collect(Collectors.toMap(
+                        result -> (Long) result[0],  // postId
+                        result -> (Long) result[1],  // commentCount
+                        (existing, replacement) -> existing
+                ));
+    }
 }

@@ -81,19 +81,5 @@ public class CommentService {
     }
 
     // Support 함수
-    @Transactional(readOnly = true)
-    public Map<Long, Long> getCommentCountsByPostIds(List<Long> postIds) {
-        if (postIds.isEmpty()) {
-            return Collections.emptyMap();
-        }
-
-        List<Object[]> results = commentRepository.findCommentCountsByPostIds(postIds);
-        return results.stream()
-                .collect(Collectors.toMap(
-                        result -> (Long) result[0],  // postId
-                        result -> (Long) result[1],  // commentCount
-                        (existing, replacement) -> existing
-                ));
-    }
 
 }
