@@ -31,9 +31,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // https 부분
-                .requiresChannel(channel -> channel
-                        .anyRequest().requiresSecure())
+                // https 부분, 우선 무력화 시켜 놓음
+//                .requiresChannel(channel -> channel
+//                        .anyRequest().requiresSecure())
 
                 .csrf(csrf -> csrf.disable()) // 임시로 비활성화, 켜 놓는 것이 좋긴 함
                 .authorizeHttpRequests(auth -> auth

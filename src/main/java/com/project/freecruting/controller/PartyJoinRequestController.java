@@ -35,9 +35,10 @@ public class PartyJoinRequestController {
 
         return ResponseEntity.ok(Map.of("message", "파티 신청 완료"));
     }
-
+    
+    // REST 원칙과 안 맞긴 하나 우선 냅둠
     @Transactional
-    @PostMapping("/party_join_requests/{request_id}/approve")
+    @PutMapping("/party_join_requests/{request_id}/approve")
     public ResponseEntity<?> approve(@PathVariable Long request_id, @LoginUser SessionUser user) {
 
         Long user_id = user.getId();
@@ -49,7 +50,7 @@ public class PartyJoinRequestController {
     }
 
     @Transactional
-    @PostMapping("/party_join_requests/{request_id}/reject")
+    @PutMapping("/party_join_requests/{request_id}/reject")
     public ResponseEntity<?> reject(@PathVariable Long request_id, @LoginUser SessionUser user) {
 
         Long user_id = user.getId();

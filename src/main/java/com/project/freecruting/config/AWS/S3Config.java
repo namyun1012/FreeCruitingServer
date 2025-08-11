@@ -7,6 +7,9 @@ import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 
+/*
+ 현재 미사용 중
+ */
 @Configuration
 public class S3Config {
 

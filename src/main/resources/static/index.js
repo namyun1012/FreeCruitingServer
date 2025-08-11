@@ -360,7 +360,7 @@ function savePartyJoinRequest(party_id) {
 function approvePartyJoinRequest(id ,party_id) {
 
         $.ajax({
-            type: 'POST',
+            type: 'PUT',
             url: '/api/v1/party_join_requests/' + id + '/approve',
             dataType: 'json',
             contentType:'application/json; charset=utf-8',
@@ -376,7 +376,7 @@ function approvePartyJoinRequest(id ,party_id) {
 function rejectPartyJoinRequest(id ,party_id) {
 
         $.ajax({
-            type: 'POST',
+            type: 'PUT',
             url: '/api/v1/party_join_requests/' + id + '/reject',
             dataType: 'json',
             contentType:'application/json; charset=utf-8',
