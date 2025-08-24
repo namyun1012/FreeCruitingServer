@@ -6,29 +6,29 @@ networks:
 
 services:
   # Spring Boot Application Service (freecruiting)
-#  app:
-#    build: .
-#    image: freecruiting:latest
-#    container_name: freecruiting
-#    ports:
-#      - "8443:8443"
-#    depends_on:
-#      - redis
-#    mem_limit: 1g
-#    restart: on-failure
-#    networks:
-#      - app-network
-#    environment:
-#      - SPRING_PROFILES_ACTIVE=dev
-#      - SPRING_DATA_REDIS_HOST=redis  # SPRING_REDIS_HOST → SPRING_DATA_REDIS_HOST
-#      - SPRING_DATA_REDIS_PORT=6379   # SPRING_REDIS_PORT → SPRING_DATA_REDIS_PORT
-#      - JAVA_TOOL_OPTIONS=-Xms256m -Xmx512m
-#      - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/${DB_NAME}
-#      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
-#      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
-#    volumes:
-#      # 업로드된 파일들을 호스트에 저장
-#      - ./uploads:/app/uploads
+  app:
+    build: .
+    image: freecruiting:latest
+    container_name: freecruiting
+    ports:
+      - "8443:8443"
+    depends_on:
+      - redis
+    mem_limit: 1g
+    restart: on-failure
+    networks:
+      - app-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DATA_REDIS_HOST=redis  # SPRING_REDIS_HOST → SPRING_DATA_REDIS_HOST
+      - SPRING_DATA_REDIS_PORT=6379   # SPRING_REDIS_PORT → SPRING_DATA_REDIS_PORT
+      - JAVA_TOOL_OPTIONS=-Xms256m -Xmx512m
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/${DB_NAME}
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+    volumes:
+      # 업로드된 파일들을 호스트에 저장
+      - ./uploads:/app/uploads
   redis:
     image: redis
     container_name: redis
