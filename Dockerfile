@@ -1,7 +1,7 @@
 # Dockerfile
 
 # 1. 베이스 이미지 선택 (Java 17 JRE가 포함된 가벼운 이미지)
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jdk-alpine
 
 # 2. JAR 파일 경로를 인자(ARG)로 지정 (빌드 도구에 따라 경로 수정)
 ARG JAR_FILE_PATH=build/libs/*.jar

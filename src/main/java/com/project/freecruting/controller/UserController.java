@@ -3,10 +3,7 @@ package com.project.freecruting.controller;
 import com.project.freecruting.config.auth.LoginUser;
 import com.project.freecruting.config.auth.dto.SessionUser;
 import com.project.freecruting.dto.user.UserSaveRequestDto;
-import com.project.freecruting.dto.user.UserUpdateRequestDto;
 import com.project.freecruting.model.User;
-import com.project.freecruting.service.storage.FileService;
-import com.project.freecruting.service.storage.LocalFileService;
 import com.project.freecruting.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -16,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.Map;
 
 @RequiredArgsConstructor

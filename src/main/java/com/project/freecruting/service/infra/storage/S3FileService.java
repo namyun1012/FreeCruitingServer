@@ -1,6 +1,5 @@
-package com.project.freecruting.service.storage;
+package com.project.freecruting.service.infra.storage;
 
-import com.project.freecruting.config.AWS.S3Config;
 import com.project.freecruting.exception.InvalidStateException;
 import com.project.freecruting.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;

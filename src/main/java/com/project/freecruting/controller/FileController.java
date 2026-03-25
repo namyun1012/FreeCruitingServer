@@ -1,8 +1,7 @@
 package com.project.freecruting.controller;
 
 import com.project.freecruting.exception.NotFoundException;
-import com.project.freecruting.service.storage.FileService;
-import com.project.freecruting.service.storage.LocalFileService;
+import com.project.freecruting.service.infra.storage.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;

@@ -15,7 +15,7 @@ services:
     depends_on:
       - redis
     mem_limit: 1g
-    restart: on-failure
+    # restart: on-failure
     networks:
       - app-network
     environment:

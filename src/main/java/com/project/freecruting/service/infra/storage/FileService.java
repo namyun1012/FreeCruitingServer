@@ -1,4 +1,4 @@
-package com.project.freecruting.service.storage;
+package com.project.freecruting.service.infra.storage;
 
 import org.springframework.web.multipart.MultipartFile;
 
