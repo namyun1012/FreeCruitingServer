@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 /**
  * 알림 응답 DTO
@@ -22,8 +24,8 @@ public class NotificationResponseDto {
 
     @Builder
     public NotificationResponseDto(Long id, String type, String content,
-                                Long referenceId, String referenceType,
-                                Boolean isRead, LocalDateTime createdDate) {
+                                   Long referenceId, String referenceType,
+                                   Boolean isRead, LocalDateTime createdDate) {
         this.id = id;
         this.type = type;
         this.content = content;
@@ -41,6 +43,15 @@ public class NotificationResponseDto {
                 .referenceId(notification.getReferenceId())
                 .referenceType(notification.getReferenceType().name())
                 .isRead(notification.isRead())
+                .createdDate(notification.getCreatedDate())
                 .build();
+    }
+
+    public String getCreatedDate() {
+        if (createdDate == null) return null;
+
+        return createdDate
+                .atZone(ZoneId.of("UTC"))
+                .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
     }
 }

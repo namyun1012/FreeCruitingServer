@@ -145,7 +145,7 @@ class NotificationPageManager {
     createNotificationHTML(notification) {
         const isUnread = !notification.isRead;
         const icon = this.getNotificationIcon(notification.type);
-        const time = this.formatTime(notification.createdAt);
+        const time = this.formatTime(notification.createdDate);
 
         return `
             <div class="notification-page-item ${isUnread ? 'unread' : ''}"
@@ -309,7 +309,9 @@ class NotificationPageManager {
      * 시간 포맷팅
      */
     formatTime(dateString) {
+        const fixed = dateString.replace(' ', 'T'); // 핵심
         const date = new Date(dateString);
+
         const now = new Date();
         const diff = Math.floor((now - date) / 1000);
 
