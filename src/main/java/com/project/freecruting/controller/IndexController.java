@@ -3,6 +3,8 @@ package com.project.freecruting.controller;
 import com.project.freecruting.config.auth.LoginUser;
 import com.project.freecruting.config.auth.dto.SessionUser;
 import com.project.freecruting.dto.comment.CommentListResponseDto;
+import com.project.freecruting.dto.notification.NotificationListResponseDto;
+import com.project.freecruting.dto.notification.NotificationPageResponseDto;
 import com.project.freecruting.dto.party.PartyJoinRequestListResponseDto;
 import com.project.freecruting.dto.party.PartyListResponseDto;
 import com.project.freecruting.dto.party.PartyMemberListResponseDto;
@@ -35,6 +37,7 @@ public class IndexController {
     private final PartyService partyService;
     private final PartyMemberService partyMemberService;
     private final PartyJoinRequestService partyJoinRequestService;
+    private final NotificationService notificationService;
 
     private static final String PAGE_DEFAULT_VALUE = "1";
     private static final String SIZE_DEFAULT_VALUE = "15";
@@ -231,7 +234,14 @@ public class IndexController {
         return "party-chat";
     }
 
-
+    /**
+     * 알림 목록 페이지
+     * GET /notifications
+     */
+    @GetMapping("/notifications")
+    public String notificationPage(@LoginUser SessionUser user) {
+        return "notification/notification-list";
+    }
 
     // Paging 사용시 Page Support 하기 위함
     private Model supportPaging(Model model, Page<?> page) {

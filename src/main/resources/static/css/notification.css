@@ -1,0 +1,367 @@
+/* ========================================
+   알림 컨테이너
+   ======================================== */
+.notification-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* ========================================
+   알림 벨 아이콘
+   ======================================== */
+.notification-bell {
+    position: relative;
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #333;
+    cursor: pointer;
+    padding: 8px 12px;
+    transition: color 0.2s;
+}
+
+.notification-bell:hover {
+    color: #007bff;
+}
+
+.notification-bell:focus {
+    outline: none;
+}
+
+/* 알림 뱃지 */
+.notification-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 10px;
+    padding: 2px 6px;
+    font-size: 11px;
+    font-weight: bold;
+    min-width: 18px;
+    text-align: center;
+}
+
+/* ========================================
+   알림 드롭다운
+   ======================================== */
+.notification-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 400px;
+    max-height: 500px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    overflow: hidden;
+    margin-top: 8px;
+}
+
+.notification-dropdown::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    right: 16px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid white;
+}
+
+/* 드롭다운 헤더 */
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    background-color: #f8f9fa;
+}
+
+.notification-header h6 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.btn-mark-all-read {
+    background: none;
+    border: none;
+    color: #007bff;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 4px 8px;
+    transition: color 0.2s;
+}
+
+.btn-mark-all-read:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* ========================================
+   알림 목록
+   ======================================== */
+.notification-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.notification-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.notification-list::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 3px;
+}
+
+/* 알림 아이템 */
+.notification-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    position: relative;
+}
+
+.notification-item:hover {
+    background-color: #f8f9fa;
+}
+
+.notification-item.unread {
+    background-color: #e7f3ff;
+}
+
+.notification-item.unread::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 60%;
+    background-color: #007bff;
+}
+
+.notification-content {
+    display: flex;
+    align-items: flex-start;
+}
+
+.notification-icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #007bff;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+}
+
+.notification-icon i {
+    font-size: 18px;
+}
+
+.notification-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.notification-text {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 4px;
+    word-wrap: break-word;
+}
+
+.notification-time {
+    font-size: 12px;
+    color: #999;
+}
+
+/* 로딩 상태 */
+.notification-loading {
+    text-align: center;
+    padding: 20px;
+    color: #999;
+}
+
+/* 알림 없음 */
+.notification-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #999;
+}
+
+.notification-empty i {
+    font-size: 48px;
+    margin-bottom: 12px;
+    color: #ccc;
+}
+
+/* ========================================
+   알림 드롭다운 푸터
+   ======================================== */
+.notification-footer {
+    border-top: 1px solid #eee;
+    text-align: center;
+    padding: 10px;
+    background-color: #f8f9fa;
+}
+
+.btn-view-all {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.btn-view-all:hover {
+    text-decoration: underline;
+}
+
+/* ========================================
+   알림 페이지
+   ======================================== */
+.notification-page-list {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.notification-page-item {
+    padding: 16px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    position: relative;
+}
+
+.notification-page-item:hover {
+    background-color: #f8f9fa;
+}
+
+.notification-page-item.unread {
+    background-color: #e7f3ff;
+}
+
+.notification-page-item.unread::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background-color: #007bff;
+}
+
+.notification-page-content {
+    display: flex;
+    align-items: flex-start;
+}
+
+.notification-page-icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: #007bff;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 16px;
+}
+
+.notification-page-icon i {
+    font-size: 20px;
+}
+
+.notification-page-body {
+    flex: 1;
+}
+
+.notification-page-text {
+    font-size: 15px;
+    color: #333;
+    margin-bottom: 6px;
+}
+
+.notification-page-time {
+    font-size: 13px;
+    color: #999;
+}
+
+/* ========================================
+   필터 버튼
+   ======================================== */
+.notification-filters {
+    display: flex;
+    gap: 8px;
+}
+
+.notification-filters .btn {
+    border-radius: 20px;
+}
+
+.notification-filters .btn.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+/* ========================================
+   반응형
+   ======================================== */
+@media (max-width: 768px) {
+    .notification-dropdown {
+        width: 100vw;
+        max-width: 400px;
+        right: -50px;
+    }
+
+    .notification-page-list {
+        margin: 0 -15px;
+    }
+}
+
+/* ========================================
+   애니메이션
+   ======================================== */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.notification-dropdown[style*="display: block"] {
+    animation: slideDown 0.2s ease-out;
+}
+
+/* 새 알림 하이라이트 */
+@keyframes highlight {
+    0% {
+        background-color: #fff3cd;
+    }
+    100% {
+        background-color: transparent;
+    }
+}
+
+.notification-item.new {
+    animation: highlight 2s ease-out;
+}

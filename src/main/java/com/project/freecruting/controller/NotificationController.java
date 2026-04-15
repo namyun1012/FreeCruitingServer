@@ -13,12 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-/**
- * 알림 컨트롤러
- *
- * @AuthenticationPrincipal User user 부분은
- * 실제 인증 방식에 맞게 수정 필요
- */
 @Slf4j
 @RequiredArgsConstructor
 @RestController

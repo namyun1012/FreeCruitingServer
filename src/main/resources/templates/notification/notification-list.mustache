@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Freecruiting</title>
+    <link rel="stylesheet" href="/css/notification.css">
+</head>
+<body>
+
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h1 class="mb-4">알림</h1>
+
+            <!-- 필터 버튼 -->
+            <div class="notification-filters mb-3">
+                <button class="btn btn-sm btn-outline-primary active" data-filter="all">
+                    전체
+                </button>
+                <button class="btn btn-sm btn-outline-primary" data-filter="unread">
+                    읽지 않음
+                </button>
+                <button class="btn btn-sm btn-secondary float-right" id="markAllReadPage">
+                    모두 읽음 처리
+                </button>
+            </div>
+
+            <!-- 알림 목록 -->
+            <div class="notification-page-list" id="notificationPageList">
+                <!-- JavaScript로 동적 생성 -->
+            </div>
+
+            <!-- 로딩 스피너 -->
+            <div class="text-center my-4" id="pageLoading" style="display: none;">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+
+            <!-- 무한 스크롤 감지 -->
+            <div id="pageSentinel"></div>
+
+            <!-- 알림 없음 메시지 -->
+            <div class="text-center text-muted my-5" id="noNotifications" style="display: none;">
+                <i class="fas fa-bell-slash fa-3x mb-3"></i>
+                <p>알림이 없습니다</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/notification-page.js"></script>
+{{>layout/footer}}
+

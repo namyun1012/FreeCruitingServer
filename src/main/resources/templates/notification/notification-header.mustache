@@ -1,0 +1,47 @@
+<!--
+  헤더에 들어갈 알림 벨 아이콘 (layout/header.mustache에 추가)
+
+  로그인한 사용자만 알림 벨 표시
+-->
+{{#userName}}
+    <div class="notification-container">
+        <!-- 알림 벨 아이콘 -->
+        <button class="notification-bell" id="notificationBell" type="button">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+        </button>
+
+        <!-- 알림 드롭다운 -->
+        <div class="notification-dropdown" id="notificationDropdown" style="display: none;">
+            <div class="notification-header">
+                <h6>알림</h6>
+                <button class="btn-mark-all-read" id="markAllRead">모두 읽음</button>
+            </div>
+
+            <div class="notification-list" id="notificationList">
+                <!-- 알림 목록이 여기에 동적으로 추가됨 -->
+                <div class="notification-loading">
+                    <div class="spinner-border spinner-border-sm" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="notification-footer">
+                <a href="/notifications" class="btn-view-all">모든 알림 보기</a>
+            </div>
+
+            <!-- 무한 스크롤 감지용 -->
+            <div class="notification-sentinel" id="notificationSentinel"></div>
+        </div>
+    </div>
+
+    <!-- Font Awesome (아이콘용) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- 알림 CSS -->
+    <link rel="stylesheet" href="/css/notification.css">
+
+    <!-- 알림 JavaScript -->
+    <script src="/js/notification.js" defer></script>
+{{/userName}}
