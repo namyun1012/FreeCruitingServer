@@ -171,6 +171,8 @@ class NotificationManager {
                 size: 20
             });
 
+            params.append('isRead', 'false');
+
             if (this.cursor) {
                 params.append('cursor', this.cursor);
             }

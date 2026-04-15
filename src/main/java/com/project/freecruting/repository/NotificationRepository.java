@@ -27,6 +27,12 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
             Pageable pageable
     );
 
+    List<Notification> findByUserIdAndIsReadOrderByIdDesc(
+            Long userId, Boolean isRead, Pageable pageable);
+
+    List<Notification> findByUserIdAndIsReadAndIdLessThanOrderByIdDesc(
+            Long userId, Boolean isRead, Long id, Pageable pageable);
+
     /**
      * 읽지 않은 알림 개수 조회
      */

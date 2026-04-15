@@ -45,12 +45,14 @@ public class NotificationController {
 
             @RequestParam(required = false) Long cursor,
             @RequestParam(defaultValue = "20") int size,
+            @RequestParam(required = false) Boolean isRead,
             @LoginUser SessionUser user)
     {
-        log.info("알림 목록 조회: userId={}, cursor={}, size={}", user.getId(), cursor, size);
+        log.info("알림 목록 조회: userId={}, cursor={}, size={}, isRead={}",
+                user.getId(), cursor, size, isRead);
 
         NotificationPageResponseDto response = notificationService.getNotifications(
-                user.getId(), cursor, size);
+                user.getId(), cursor, size, isRead);
 
         return ResponseEntity.ok(response);
     }

@@ -84,17 +84,27 @@ public class NotificationService {
     /**
      * 커서 기반 알림 목록 조회
      */
-    public NotificationPageResponseDto getNotifications(Long userId, Long cursor, int size) { {
+    public NotificationPageResponseDto getNotifications(Long userId, Long cursor, int size, Boolean isRead) {
         List<Notification> notifications;
 
         if (cursor == null) {
             // 첫 페이지
-            notifications = notificationRepository.findByUserIdOrderByIdDesc(
-                    userId, PageRequest.of(0, size + 1));
+            if (isRead == null) {
+                notifications = notificationRepository.findByUserIdOrderByIdDesc(
+                        userId, PageRequest.of(0, size + 1));
+            } else {
+                notifications = notificationRepository.findByUserIdAndIsReadOrderByIdDesc(
+                        userId, isRead, PageRequest.of(0, size + 1));
+            }
         } else {
             // 다음 페이지
-            notifications = notificationRepository.findByUserIdAndIdLessThanOrderByIdDesc(
-                    userId, cursor, PageRequest.of(0, size + 1));
+            if (isRead == null) {
+                notifications = notificationRepository.findByUserIdAndIdLessThanOrderByIdDesc(
+                        userId, cursor, PageRequest.of(0, size + 1));
+            } else {
+                notifications = notificationRepository.findByUserIdAndIsReadAndIdLessThanOrderByIdDesc(
+                        userId, isRead, cursor, PageRequest.of(0, size + 1));
+            }
         }
 
         // hasNext 판단
@@ -109,7 +119,7 @@ public class NotificationService {
                 : null;
 
         return NotificationPageResponseDto.of(notifications, nextCursor, hasNext);
-    }}
+    }
 
     /**
      * 읽지 않은 알림 개수 조회
