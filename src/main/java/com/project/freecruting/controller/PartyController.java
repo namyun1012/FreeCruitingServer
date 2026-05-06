@@ -31,7 +31,7 @@ public class PartyController {
     
     // 코드 개선 필수
     @Transactional
-    @PostMapping("/partys")
+    @PostMapping("/parties")
     public ResponseEntity<?> save(@RequestBody PartySaveRequestDto requestDto, @LoginUser SessionUser user) {
         // requestDto 에서 User ID 는 Controller 에서 Setting 을 해주기.
         Long user_id = user.getId();
@@ -42,7 +42,7 @@ public class PartyController {
         return ResponseEntity.ok(Map.of("message", "파티 생성 완료"));
     }
 
-    @PutMapping("/partys/{id}")
+    @PutMapping("/parties/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody PartyUpdateRequestDto requestDto, @LoginUser SessionUser user) {
         Long user_id = user.getId();
         Long result_id = partyService.update(id, requestDto, user_id);
@@ -51,7 +51,7 @@ public class PartyController {
         return ResponseEntity.ok(Map.of("message", "파티 수정 완료"));
     }
 
-    @DeleteMapping("/partys/{id}")
+    @DeleteMapping("/parties/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id, @LoginUser SessionUser user) {
         Long user_id = user.getId();
         Long result_id = partyService.delete(id, user_id);

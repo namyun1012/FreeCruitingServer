@@ -172,11 +172,11 @@ public class IndexController {
     }
 
     @GetMapping("/party")
-    public String partys(Model model, @LoginUser SessionUser user,
+    public String parties(Model model, @LoginUser SessionUser user,
                          @RequestParam(defaultValue = PAGE_DEFAULT_VALUE) int page, @RequestParam(defaultValue = SIZE_DEFAULT_VALUE) int size) {
         Page<PartyListResponseDto> partyPage = partyService.findAllPage(page - 1, size);
 
-        model.addAttribute("partys", partyPage.getContent());
+        model.addAttribute("parties", partyPage.getContent());
         model = supportPaging(model, partyPage);
 
         if(user != null) {

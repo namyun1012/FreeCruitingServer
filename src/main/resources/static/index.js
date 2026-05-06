@@ -231,7 +231,7 @@ function saveParty() {
 
         $.ajax({
             type: 'POST',
-            url: '/api/v1/partys',
+            url: '/api/v1/parties',
             dataType: 'json',
             contentType:'application/json; charset=utf-8',
             data: JSON.stringify(data)
@@ -254,7 +254,7 @@ function updateParty() {
 
         $.ajax({
             type: 'PUT',
-            url: '/api/v1/partys/' + party_id,
+            url: '/api/v1/parties/' + party_id,
             dataType: 'json',
             contentType:'application/json; charset=utf-8',
             data: JSON.stringify(data)
@@ -271,7 +271,7 @@ function deleteParty() {
 
         $.ajax({
             type: 'DELETE',
-            url: '/api/v1/partys/' + party_id,
+            url: '/api/v1/parties/' + party_id,
             dataType: 'json',
             contentType:'application/json; charset=utf-8'
         }).done(function() {
