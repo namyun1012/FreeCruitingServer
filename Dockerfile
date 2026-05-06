@@ -17,7 +17,7 @@ COPY ${JAR_FILE_PATH} app.jar
 ENV JAVA_TOOL_OPTIONS="-Xms256m -Xmx512m"
 
 # 6. 애플리케이션 실행 포트 노출 (Spring Boot 기본 포트)
-EXPOSE 8443
+EXPOSE 8080
 
 # 7. 컨테이너 시작 시 실행할 명령어
 ENTRYPOINT ["java", "-jar", "app.jar"]
