@@ -51,7 +51,7 @@ class CommentServiceTest {
 
     @Mock
     private ApplicationEventPublisher eventPublisher;
-
+    
     private User createUser(Long id, String name) {
         User user = User.builder()
                 .email("test@example.com")

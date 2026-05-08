@@ -22,7 +22,7 @@ public interface PartyMemberRepository extends JpaRepository<PartyMember, Long> 
     @Query(value = "SELECT * FROM party_member WHERE party_id = :partyId LIMIT 1", nativeQuery = true)
     Optional<PartyMember> findRandomPartyMemberByPartyId(@Param("partyId") Long partyId);
 
-    @Query(value = "SELECT COUNT(pm) > 0 FROM party_member pm WHERE pm.party_id = :partyId", nativeQuery = true)
+    @Query(value = "SELECT COUNT(*) > 0 FROM party_member WHERE party_id = :partyId", nativeQuery = true)
     boolean existsByPartyId(@Param("partyId") Long partyId);
 
 
