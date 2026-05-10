@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**FreeCruiting** is a team-recruiting platform (Spring Boot 3.4.1, Java 17) where users can post recruiting notices, form parties (teams), chat in real time, and receive live notifications. The server runs HTTPS on port **8443**.
+**FreeCruiting** is a team-recruiting platform (Spring Boot 3.4.1, Java 17) where users can post recruiting notices, form parties (teams), chat in real time, and receive live notifications. The server runs HTTP on port **8080**.
 
 ---
 
@@ -12,7 +12,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Build & Run
 ```bash
-./gradlew bootRun           # Start the application (HTTPS localhost:8443)
+./gradlew bootRun           # Start the application (HTTP localhost:8080)
 ./gradlew build             # Full build → build/libs/*.jar
 ./gradlew clean build -x test  # Build skipping tests
 ```
