@@ -1,0 +1,86 @@
+{{#contest}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}} - FreeCruiting</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/contest.css">
+</head>
+<body>
+
+<div class="col-md-12">
+    {{>layout/userinfo}}
+    <br>
+    {{>layout/navigate}}
+
+    <div class="mt-3">
+        <!-- 배너 -->
+        <div class="contest-detail-banner">
+            <div class="mb-2">
+                <span class="badge badge-secondary mr-1">{{category}}</span>
+                <span class="badge badge-{{status}}">{{statusLabel}}</span>
+            </div>
+            <h2>{{title}}</h2>
+            <p class="mb-0">주최: {{organizer}}</p>
+        </div>
+
+        <!-- 공모전 정보 -->
+        <table class="table table-bordered contest-info-table mb-4">
+            <tbody>
+                <tr>
+                    <th>모집 기간</th>
+                    <td>{{applicationStartDate}} ~ {{applicationDeadline}}</td>
+                    <th>대상</th>
+                    <td>{{#target}}{{target}}{{/target}}{{^target}}-{{/target}}</td>
+                </tr>
+                {{#hasContestDates}}
+                <tr>
+                    <th>공모 기간</th>
+                    <td>{{contestStartDate}} ~ {{contestEndDate}}</td>
+                    <th>지역</th>
+                    <td>{{#region}}{{region}}{{/region}}{{^region}}-{{/region}}</td>
+                </tr>
+                {{/hasContestDates}}
+                <tr>
+                    <th>조회수</th>
+                    <td>{{views}}</td>
+                    <th>공식 사이트</th>
+                    <td>
+                        {{#officialUrl}}
+                        <a href="{{officialUrl}}" target="_blank" rel="noopener noreferrer">바로가기 →</a>
+                        {{/officialUrl}}
+                        {{^officialUrl}}-{{/officialUrl}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- 이미지 -->
+        {{#imageUrl}}
+        <div class="text-center mb-4">
+            <img src="{{imageUrl}}" class="img-fluid rounded" alt="공모전 이미지"
+                 style="max-height: 480px;">
+        </div>
+        {{/imageUrl}}
+
+        <!-- 설명 -->
+        {{#description}}
+        <h5>공모전 소개</h5>
+        <div class="contest-description-box mb-4">{{description}}</div>
+        {{/description}}
+
+        <!-- 버튼 -->
+        <div class="mb-5">
+            <a href="/contest" class="btn btn-secondary">목록으로</a>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="/js/contest.js"></script>
+</body>
+</html>
+{{/contest}}

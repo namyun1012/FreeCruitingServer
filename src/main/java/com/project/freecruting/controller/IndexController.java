@@ -3,6 +3,8 @@ package com.project.freecruting.controller;
 import com.project.freecruting.config.auth.LoginUser;
 import com.project.freecruting.config.auth.dto.SessionUser;
 import com.project.freecruting.dto.comment.CommentListResponseDto;
+import com.project.freecruting.dto.contest.ContestListResponseDto;
+import com.project.freecruting.dto.contest.ContestResponseDto;
 import com.project.freecruting.dto.notification.NotificationListResponseDto;
 import com.project.freecruting.dto.notification.NotificationPageResponseDto;
 import com.project.freecruting.dto.party.PartyJoinRequestListResponseDto;
@@ -38,6 +40,7 @@ public class IndexController {
     private final PartyMemberService partyMemberService;
     private final PartyJoinRequestService partyJoinRequestService;
     private final NotificationService notificationService;
+    private final ContestService contestService;
 
     private static final String PAGE_DEFAULT_VALUE = "1";
     private static final String SIZE_DEFAULT_VALUE = "15";
@@ -241,6 +244,46 @@ public class IndexController {
     @GetMapping("/notifications")
     public String notificationPage(@LoginUser SessionUser user) {
         return "notification/notification-list";
+    }
+
+    @GetMapping("/contest")
+    public String contests(Model model, @LoginUser SessionUser user,
+                           @RequestParam(required = false) String category,
+                           @RequestParam(required = false) String keyword,
+                           @RequestParam(defaultValue = PAGE_DEFAULT_VALUE) int page,
+                           @RequestParam(defaultValue = SIZE_DEFAULT_VALUE) int size) {
+        Page<ContestListResponseDto> contestPage =
+                contestService.findContestPages(category, keyword, page - 1, size);
+
+        model.addAttribute("contests", contestPage.getContent());
+        model = supportPaging(model, contestPage);
+        model.addAttribute("currentCategory", category);
+        model.addAttribute("currentKeyword", keyword != null ? keyword : "");
+
+        if (user != null) {
+            model.addAttribute("userName", user.getName());
+        }
+        return "contest-list";
+    }
+
+    @GetMapping("/contest/read/{id}")
+    public String contestRead(@PathVariable Long id, Model model, @LoginUser SessionUser user) {
+        Long userId = user != null ? user.getId() : null;
+        ContestResponseDto dto = contestService.findById(id, userId);
+        model.addAttribute("contest", dto);
+
+        Map<String, String> statusLabels = new HashMap<>();
+        statusLabels.put("UPCOMING",    "모집 예정");
+        statusLabels.put("RECRUITING",  "모집 중");
+        statusLabels.put("IN_PROGRESS", "진행 중");
+        statusLabels.put("CLOSED",      "마감");
+        model.addAttribute("statusLabel", statusLabels.getOrDefault(dto.getStatus(), dto.getStatus()));
+        model.addAttribute("hasContestDates", dto.getContestStartDate() != null);
+
+        if (user != null) {
+            model.addAttribute("userName", user.getName());
+        }
+        return "contest-read";
     }
 
     // Paging 사용시 Page Support 하기 위함

@@ -1,0 +1,118 @@
+/* ─── Contest Card ─────────────────────────────────────── */
+.contest-card {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+    height: 100%;
+}
+
+.contest-card:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+}
+
+.contest-card-img {
+    width: 100%;
+    height: 170px;
+    object-fit: cover;
+}
+
+.contest-card-img-placeholder {
+    width: 100%;
+    height: 170px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+}
+
+.contest-card-body {
+    padding: 0.9rem;
+}
+
+.contest-card-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 0.4rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.contest-card-organizer {
+    font-size: 0.82rem;
+    color: #6c757d;
+    margin-bottom: 0;
+}
+
+.contest-card-footer {
+    padding: 0.6rem 0.9rem;
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    font-size: 0.78rem;
+    color: #6c757d;
+}
+
+/* ─── Status Badges ──────────────────────────────────────── */
+.badge-UPCOMING    { background-color: #6c757d; color: #fff; }
+.badge-RECRUITING  { background-color: #28a745; color: #fff; }
+.badge-IN_PROGRESS { background-color: #007bff; color: #fff; }
+.badge-CLOSED      { background-color: #dc3545; color: #fff; }
+
+/* ─── Category Filter ────────────────────────────────────── */
+.category-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1.25rem;
+}
+
+.category-filter .btn {
+    border-radius: 20px;
+    font-size: 0.82rem;
+    padding: 0.3rem 0.9rem;
+}
+
+/* ─── Loading Spinner ────────────────────────────────────── */
+.contest-loading {
+    text-align: center;
+    padding: 4rem;
+    color: #6c757d;
+}
+
+/* ─── Detail Page ────────────────────────────────────────── */
+.contest-detail-banner {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.contest-detail-banner h2 {
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.contest-info-table th {
+    width: 20%;
+    background-color: #f8f9fa;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.contest-info-table td {
+    vertical-align: middle;
+}
+
+.contest-description-box {
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    padding: 1.25rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.7;
+}

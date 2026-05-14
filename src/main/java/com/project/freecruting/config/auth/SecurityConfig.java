@@ -34,6 +34,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/h2-console/**", "/profile").permitAll()
                         .requestMatchers("/login", "/signup").permitAll()
                         .requestMatchers("/api/v1/posts/**", "/post/read/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/contest", "/contest/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/contests/**").permitAll()
                         .requestMatchers("/api/v1/users/**").permitAll()
                         .requestMatchers("/api/v1/**").hasRole("USER")
