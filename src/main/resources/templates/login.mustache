@@ -11,7 +11,8 @@
         <div class="col-md-6">
             <div class="card p-4">
                 <h1 class="text-center mb-4">로그인</h1>
-                <form action="/login" method="post">
+                <form action="/login" method="post" id="loginForm">
+                    <input type="hidden" id="csrf-token-input" name="_csrf" value="">
                     <div class="mb-3">
                         <label for="username" class="form-label">아이디</label>
                         <input type="text" id="username" name="username" class="form-control" required>
@@ -24,6 +25,13 @@
                         <button type="submit" class="btn btn-primary">로그인</button>
                     </div>
                 </form>
+                <script>
+                    document.getElementById('loginForm').addEventListener('submit', function() {
+                        var match = document.cookie.match(/(?:^|;\s*)XSRF-TOKEN=([^;]*)/);
+                        var token = match ? decodeURIComponent(match[1]) : '';
+                        document.getElementById('csrf-token-input').value = token;
+                    });
+                </script>
                 <div class="text-center mt-3">
                     <a href="/oauth2/authorization/google" class="btn btn-danger">Google 계정으로 로그인</a>
                 </div>

@@ -316,7 +316,8 @@ class NotificationManager {
         try {
             const response = await fetch(`/api/v1/notifications/${notificationId}/read`, {
                 method: 'PATCH',
-                credentials: 'include'
+                credentials: 'include',
+                headers: { 'X-XSRF-TOKEN': getCsrfToken() }
             });
 
             if (response.ok) {
@@ -346,7 +347,8 @@ class NotificationManager {
         try {
             const response = await fetch('/api/v1/notifications/read-all', {
                 method: 'PATCH',
-                credentials: 'include'
+                credentials: 'include',
+                headers: { 'X-XSRF-TOKEN': getCsrfToken() }
             });
 
             if (response.ok) {

@@ -1,4 +1,13 @@
 
+$.ajaxSetup({
+    beforeSend: function(xhr) {
+        var token = getCsrfToken();
+        if (token) {
+            xhr.setRequestHeader('X-XSRF-TOKEN', token);
+        }
+    }
+});
+
 var main = {
     init : function () {
         var _this = this;
