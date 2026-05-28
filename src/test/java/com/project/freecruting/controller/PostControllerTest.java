@@ -189,7 +189,7 @@ class PostControllerTest {
         @Test
         @DisplayName("로그인 사용자가 조회하면 200 OK와 게시글 정보를 반환한다")
         void findById_loggedIn_returns200() throws Exception {
-            given(postService.findById(eq(1L), eq(USER_ID))).willReturn(buildPostResponseDto(1L));
+            given(postService.findById(eq(1L), eq("u:" + USER_ID))).willReturn(buildPostResponseDto(1L));
 
             mockMvc.perform(get("/api/v1/posts/1"))
                     .andExpect(status().isOk())
@@ -198,9 +198,10 @@ class PostControllerTest {
         }
 
         @Test
-        @DisplayName("비로그인 사용자도 조회할 수 있다 (200 OK)")
+        @DisplayName("비로그인 사용자도 조회할 수 있다 (200 OK, 세션 ID 기반 identifier 사용)")
         void findById_anonymous_returns200() throws Exception {
-            given(postService.findById(eq(1L), isNull())).willReturn(buildPostResponseDto(1L));
+            // 비로그인 시 컨트롤러는 "s:{sessionId}" 형식의 identifier를 전달
+            given(postService.findById(eq(1L), anyString())).willReturn(buildPostResponseDto(1L));
 
             anonymousMockMvc.perform(get("/api/v1/posts/1"))
                     .andExpect(status().isOk())
@@ -210,7 +211,7 @@ class PostControllerTest {
         @Test
         @DisplayName("존재하지 않는 게시글 조회 시 404를 반환한다")
         void findById_notFound_returns404() throws Exception {
-            given(postService.findById(eq(999L), eq(USER_ID)))
+            given(postService.findById(eq(999L), eq("u:" + USER_ID)))
                     .willThrow(new NotFoundException("게시글 없음"));
 
             mockMvc.perform(get("/api/v1/posts/999"))

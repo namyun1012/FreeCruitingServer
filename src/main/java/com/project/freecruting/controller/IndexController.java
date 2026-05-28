@@ -17,6 +17,7 @@ import com.project.freecruting.model.Party;
 import com.project.freecruting.model.type.SearchType;
 import com.project.freecruting.service.*;
 import lombok.RequiredArgsConstructor;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -98,12 +99,13 @@ public class IndexController {
     }
 
     @GetMapping("/post/read/{id}")
-    public String postRead(@PathVariable Long id, Model model, @LoginUser SessionUser user,
+    public String postRead(@PathVariable Long id, Model model, @LoginUser SessionUser user, HttpServletRequest request,
                            @RequestParam(defaultValue = PAGE_DEFAULT_VALUE) int page, @RequestParam(defaultValue = SIZE_DEFAULT_VALUE) int size) {
 
-        PostResponseDto dto;
-        if (user == null)  dto = postService.findById(id, null);
-        else dto = postService.findById(id, user.getId());
+        String identifier = (user != null)
+                ? "u:" + user.getId()
+                : "s:" + request.getSession().getId();
+        PostResponseDto dto = postService.findById(id, identifier);
 
         model.addAttribute("post",dto);
 

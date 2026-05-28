@@ -204,24 +204,27 @@ class PostServiceTest {
             Post post = createPost(postId, 10L);
             given(postRepository.findById(postId)).willReturn(Optional.of(post));
 
-            PostResponseDto result = postService.findById(postId, 1L);
+            PostResponseDto result = postService.findById(postId, "u:1");
 
             verify(postRepository).increaseViews(postId);
             assertThat(result.getId()).isEqualTo(postId);
         }
 
         @Test
-        @DisplayName("Redis 활성화여도 비로그인(userId=null)이면 DB 조회수 증가를 호출한다")
-        void findById_redisEnabled_nullUser_incrementsDb() {
+        @DisplayName("Redis 활성화 시 비로그인(세션 기반 identifier)도 Redis로 처리한다")
+        void findById_redisEnabled_sessionIdentifier_usesRedis() {
             ReflectionTestUtils.setField(postService, "useRedis", true);
             Long postId = 1L;
             Post post = createPost(postId, 10L);
             given(postRepository.findById(postId)).willReturn(Optional.of(post));
+            given(redisTemplate.opsForSet()).willReturn(setOperations);
+            given(setOperations.add(anyString(), anyString())).willReturn(1L); // 신규 세션
+            given(redisTemplate.opsForValue()).willReturn(valueOperations);
 
-            postService.findById(postId, null);
+            postService.findById(postId, "s:someSessionId");
 
-            verify(postRepository).increaseViews(postId);
-            verify(redisTemplate, never()).opsForSet();
+            verify(valueOperations).increment(anyString());
+            verify(postRepository, never()).increaseViews(postId);
         }
 
         @Test
@@ -235,14 +238,14 @@ class PostServiceTest {
             given(setOperations.add(anyString(), anyString())).willReturn(1L); // 신규 사용자
             given(redisTemplate.opsForValue()).willReturn(valueOperations);
 
-            postService.findById(postId, userId);
+            postService.findById(postId, "u:" + userId);
 
             verify(valueOperations).increment(anyString());
             verify(postRepository, never()).increaseViews(postId);
         }
 
         @Test
-        @DisplayName("Redis 사용, 24시간 내 재조회이면 조회수를 올리지 않는다")
+        @DisplayName("Redis 사용, 당일 재조회이면 조회수를 올리지 않는다")
         void findById_redisEnabled_duplicateView_skipsIncrement() {
             ReflectionTestUtils.setField(postService, "useRedis", true);
             Long postId = 1L, userId = 5L;
@@ -250,10 +253,13 @@ class PostServiceTest {
             given(postRepository.findById(postId)).willReturn(Optional.of(post));
             given(redisTemplate.opsForSet()).willReturn(setOperations);
             given(setOperations.add(anyString(), anyString())).willReturn(0L); // 이미 조회한 사용자
+            // 중복 조회여도 getRedisViewDelta() 에서 delta 읽기 위해 opsForValue().get() 은 호출됨
+            given(redisTemplate.opsForValue()).willReturn(valueOperations);
+            given(valueOperations.get(anyString())).willReturn(null);
 
-            postService.findById(postId, userId);
+            postService.findById(postId, "u:" + userId);
 
-            verify(redisTemplate, never()).opsForValue();
+            verify(valueOperations, never()).increment(anyString()); // increment 만 호출 안 됨
             verify(postRepository, never()).increaseViews(postId);
         }
 
@@ -262,7 +268,7 @@ class PostServiceTest {
         void findById_notFound_throwsNotFoundException() {
             given(postRepository.findById(anyLong())).willReturn(Optional.empty());
 
-            assertThatThrownBy(() -> postService.findById(999L, 1L))
+            assertThatThrownBy(() -> postService.findById(999L, "u:1"))
                     .isInstanceOf(NotFoundException.class);
         }
     }

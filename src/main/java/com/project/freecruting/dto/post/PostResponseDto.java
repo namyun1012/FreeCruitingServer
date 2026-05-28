@@ -31,4 +31,15 @@ public class PostResponseDto {
         this.views      = entity.getViews();
     }
 
+    public PostResponseDto(Post entity, long redisDelta) {
+        this.id         = entity.getId();
+        this.title      = entity.getTitle();
+        this.content    = entity.getContent();
+        this.author     = entity.getAuthor();
+        this.imageURL   = entity.getImageURL();
+        this.type       = entity.getType().toString();
+        this.comments   = entity.getComments();
+        this.views      = (int) (entity.getViews() + redisDelta);
+    }
+
 }

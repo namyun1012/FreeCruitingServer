@@ -8,6 +8,7 @@ import com.project.freecruting.dto.post.PostSaveRequestDto;
 import com.project.freecruting.dto.post.PostUpdateRequestDto;
 import com.project.freecruting.model.type.SearchType;
 import com.project.freecruting.service.PostService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -41,13 +42,12 @@ public class PostController {
     }
 
     @GetMapping("/posts/{id}")
-    public PostResponseDto findById(@PathVariable Long id, @LoginUser SessionUser user) {
-
-        if(user == null) {
-            return postService.findById(id, null);
-        }
-
-        return postService.findById(id, user.getId());
+    public PostResponseDto findById(@PathVariable Long id, @LoginUser SessionUser user, HttpServletRequest request) {
+        // 로그인 유저는 userId 기반, 비로그인은 세션 ID 기반으로 dedup
+        String identifier = (user != null)
+                ? "u:" + user.getId()
+                : "s:" + request.getSession().getId();
+        return postService.findById(id, identifier);
     }
 
     @DeleteMapping("/posts/{id}")

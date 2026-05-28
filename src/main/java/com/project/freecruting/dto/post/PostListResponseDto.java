@@ -43,4 +43,16 @@ public class PostListResponseDto {
         this.comments = commentCount != null ? commentCount.intValue() : 0;
     }
 
+    public PostListResponseDto(Post entity, Long commentCount, long redisDelta) {
+        this.id = entity.getId();
+        this.title = entity.getTitle();
+        this.author = entity.getAuthor();
+        this.imageURL = entity.getImageURL();
+        this.type = entity.getType().toString();
+        this.modifiedDate = entity.getModifiedDate();
+        this.content = entity.getContent();
+        this.views = (int) (entity.getViews() + redisDelta);
+        this.comments = commentCount != null ? commentCount.intValue() : 0;
+    }
+
 }
